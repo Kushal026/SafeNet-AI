@@ -6,7 +6,8 @@ Works without external APIs using rule-based and pattern matching.
 import re
 import math
 import string
-from typing import Tuple
+import difflib
+from typing import Tuple, Optional
 
 
 # ─── Phishing Detection ──────────────────────────────────────────────────────
@@ -41,7 +42,7 @@ MALICIOUS_LINK_PATTERNS = [
 ]
 
 
-def detect_phishing(text: str) -> dict:
+def detect_phishing(text: str, sender: Optional[str] = None, headers: Optional[dict] = None) -> dict:
     """
     Analyze text for phishing indicators.
     Returns structured analysis result.
@@ -51,6 +52,9 @@ def detect_phishing(text: str) -> dict:
     found_domains = []
     found_brands = []
     found_links = []
+    sender_indicators = []
+    header_indicators = []
+    style_indicators = []
 
     # Check urgency words
     for word in URGENCY_WORDS:
@@ -62,35 +66,122 @@ def detect_phishing(text: str) -> dict:
         if pattern in text_lower:
             found_domains.append(pattern)
 
-    # Check brand impersonation
+    # Check brand impersonation (text mentions brand)
     for brand in BRAND_IMPERSONATION:
         if brand in text_lower:
             found_brands.append(brand)
 
-    # Check malicious link patterns
+    # Check malicious link patterns and extract domains
     urls = re.findall(r'https?://[^\s]+', text, re.IGNORECASE)
     for url in urls:
         for pattern in MALICIOUS_LINK_PATTERNS:
             if re.search(pattern, url, re.IGNORECASE):
-                found_links.append(url[:80])
+                found_links.append(url[:200])
                 break
+        # domain-based heuristics: check similarity to known brands
+        try:
+            from urllib.parse import urlparse
+            dom = urlparse(url).netloc.lower()
+            # strip port
+            dom = dom.split(":")[0]
+            # compare domain parts to brands
+            for brand in BRAND_IMPERSONATION:
+                brand_label = brand.replace(" ", "").lower()
+                # exact contains
+                if brand_label in dom:
+                    if brand not in found_brands:
+                        found_brands.append(brand)
+                else:
+                    # fuzzy match against second-level label
+                    label = dom.split('.')[-2] if '.' in dom else dom
+                    ratio = difflib.SequenceMatcher(a=brand_label, b=label).ratio()
+                    if ratio > 0.7:
+                        if brand not in found_brands:
+                            found_brands.append(brand + " (lookalike)")
+        except Exception:
+            pass
 
     # Check for suspicious link patterns in text (non-https links)
     if re.search(r'click\s+here\s*[:\-]?\s*https?://', text_lower):
         found_links.append("Suspicious 'click here' with link")
 
-    # Score calculation
-    score = 0
-    score += min(len(found_urgency) * 12, 35)
-    score += min(len(found_domains) * 15, 30)
-    score += min(len(found_brands) * 10, 20)
-    score += min(len(found_links) * 15, 30)
+    # Check for explicit 'password' or 'enter your password' on pages/text
+    if re.search(r'enter (your )?(password|credentials)|provide (your )?(password|credentials)|enter password', text_lower):
+        found_urgency.append('password-request')
 
-    # Extra indicators
+    # Sender analysis (if provided)
+    KNOWN_BAD_SENDERS = [
+        "noreply@secure-update.com", "support@paypa1.com", "admin@banking-alert.net"
+    ]
+    if sender:
+        s = sender.strip().lower()
+        # extract email
+        m = re.search(r'([a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})', s)
+        email = m.group(1) if m else s
+        local, _, domain = email.partition('@')
+        if any(b in email for b in KNOWN_BAD_SENDERS) or any(b in domain for b in ('.tk', '.ml', '.ga', '.cf', '.gq')):
+            header_indicators.append('sender-domain-suspicious')
+        # sender display name mismatch (common spoofing) like 'PayPal <random@x.com>' vs display
+        if any(brand.replace(' ', '') in local or brand.replace(' ', '') in email for brand in BRAND_IMPERSONATION):
+            sender_indicators.append('sender-mentions-brand')
+        if email in KNOWN_BAD_SENDERS:
+            sender_indicators.append('known-malicious-sender')
+
+    # Header analysis (spam flags, many recipients)
+    if headers and isinstance(headers, dict):
+        # common spam header markers
+        xflag = headers.get('x-spam-flag') or headers.get('X-Spam-Flag') or headers.get('X-Spam-Status')
+        if xflag and 'yes' in str(xflag).lower():
+            header_indicators.append('spam-flag')
+        # many recipients
+        to_field = headers.get('to') or headers.get('To')
+        if isinstance(to_field, str) and to_field.count(',') >= 3:
+            header_indicators.append('multiple-recipients')
+        # suspicious subject
+        subj = headers.get('subject') or headers.get('Subject')
+        if isinstance(subj, str):
+            for w in URGENCY_WORDS:
+                if w in subj.lower():
+                    found_urgency.append(f"subject:{w}")
+
+    # Style indicators: many exclamations, high uppercase ratio
+    exclaims = text.count('!')
+    if exclaims >= 3:
+        style_indicators.append('many-exclamations')
+    letters = re.findall(r'[A-Za-z]', text)
+    if letters:
+        uppers = sum(1 for c in letters if c.isupper())
+        if uppers / len(letters) > 0.6:
+            style_indicators.append('all-caps-style')
+
+    # Score calculation (textual)
+    score_text = 0
+    score_text += min(len(found_urgency) * 10, 35)
+    score_text += min(len(found_domains) * 12, 30)
+    score_text += min(len(found_brands) * 14, 35)
+    score_text += min(len(found_links) * 12, 30)
+
+    # Sender / header / style based scoring
+    score_sender = min(len(sender_indicators) * 18, 40)
+    score_header = min(len(header_indicators) * 15, 30)
+    score_style = min(len(style_indicators) * 12, 24)
+
+    score = score_text + score_sender + score_header + score_style
+
+    # Extra indicators: email addresses in message body that mimic brands
     if re.search(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b', text, re.IGNORECASE):
         emails = re.findall(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b', text, re.IGNORECASE)
-        if any(found for found in emails if any(b in found.lower() for b in BRAND_IMPERSONATION)):
-            score += 15
+        if any(found for found in emails if any(b.replace(' ', '') in found.lower() for b in BRAND_IMPERSONATION)):
+            score += 12
+
+    # penalize if both brand mention and suspicious domain/link present
+    if found_brands and found_links:
+        score = min(100, score + 12)
+
+    # If only low textual indicators (weak urgency words) and no sender/header/style corroboration, reduce false positives
+    textual_only = (score_text > 0 and score_text < 40 and (score_sender + score_header + score_style) == 0)
+    if textual_only:
+        score = max(0, score - 30)
 
     score = min(score, 100)
 
@@ -112,9 +203,15 @@ def detect_phishing(text: str) -> dict:
     if found_domains:
         suspicious_elements.append(f"Suspicious domain patterns: {', '.join(found_domains[:3])}")
     if found_brands:
-        suspicious_elements.append(f"Brand impersonation: {', '.join(found_brands[:3])}")
+        suspicious_elements.append(f"Brand impersonation / lookalike: {', '.join(found_brands[:3])}")
     if found_links:
         suspicious_elements.append(f"Malicious link patterns detected")
+    if sender_indicators:
+        suspicious_elements.append(f"Sender indicators: {', '.join(sender_indicators[:3])}")
+    if header_indicators:
+        suspicious_elements.append(f"Header/spam indicators: {', '.join(header_indicators[:3])}")
+    if style_indicators:
+        suspicious_elements.append(f"Style indicators: {', '.join(style_indicators[:3])}")
 
     return {
         "threat_level": level,
@@ -226,7 +323,7 @@ def analyze_password(password: str) -> dict:
     elif score >= 60:
         strength = "Strong"
     elif score >= 40:
-        strength = "Moderate"
+        strength = "Normal"
     elif score >= 20:
         strength = "Weak"
     else:
@@ -318,21 +415,177 @@ DANGEROUS_COMBOS = [
 ]
 
 PERMISSION_BASE_RISK = {
-    "camera": 25, "microphone": 25, "location": 20, "contacts": 20,
-    "storage": 15, "internet": 5, "background": 20, "sms": 30,
-    "accessibility": 35, "overlay": 30, "device_admin": 40,
-    "read_sms": 35, "call_log": 25, "accounts": 20, "biometric": 20,
+    "contacts": 20,
+    "sms": 30,
+    "accessibility": 40,
+    "location": 25,
+    "location_background": 25,
+    "camera": 10,
+    "microphone": 15,
+    "storage": 15,
+    "internet": 5,
+    "background": 20,
+    "overlay": 30,
+    "device_admin": 40,
+    "read_sms": 35,
+    "call_log": 25,
+    "accounts": 20,
+    "biometric": 20,
 }
 
+# Human-friendly why/usage hints
+PERMISSION_USAGE_HINTS = {
+    "camera": "Used for taking photos or scanning QR codes.",
+    "microphone": "Used for recording audio or voice calls.",
+    "location": "Used to provide location-based features.",
+    "location_background": "Allows tracking location even when app is not in use.",
+    "contacts": "Access to your contacts — may read or upload contact list.",
+    "storage": "Access to device storage for reading/writing files or photos.",
+    "internet": "Network access — required to send or receive data.",
+    "background": "Run background services when app is not in foreground.",
+    "sms": "Read or send SMS messages — can access OTPs.",
+    "read_sms": "Read SMS messages (may access OTPs and personal messages).",
+    "accessibility": "Highly privileged access that can observe and interact with UI.",
+    "overlay": "Draw over other apps (can display fake UIs).",
+    "device_admin": "Grants device admin capabilities (very powerful).",
+    "call_log": "Access to call history.",
+}
+
+# Expected permissions per app category
+APP_CATEGORY_PERMISSIONS = {
+    "social": {"internet", "camera", "microphone", "storage", "contacts"},
+    "banking": {"internet", "accounts", "storage"},
+    "camera": {"camera", "storage", "microphone"},
+    "flashlight": {"camera"},
+    "utility": {"internet", "storage"},
+    "game": {"internet", "storage"},
+    "shopping": {"internet", "storage", "accounts"},
+}
+
+# Per-category required and optional permission rules (for rule-driven classification)
+APP_CATEGORY_REQUIRED = {
+    "weather": {"location", "internet"},
+    "banking": {"sms", "internet"},
+    "social": {"internet", "storage"},
+    "camera": {"camera", "storage"},
+    "flashlight": {"camera"},
+    "utility": {"internet"},
+    "game": {"internet", "storage"},
+    "shopping": {"internet", "storage"},
+}
+
+APP_CATEGORY_OPTIONAL = {
+    "weather": {"sms"},
+    "banking": {"contacts", "location", "camera"},
+    "social": {"contacts", "microphone", "camera"},
+    "camera": {"microphone"},
+    "flashlight": set(),
+    "utility": set(),
+    "game": {"microphone"},
+    "shopping": {"accounts"},
+}
+
+# Small trusted apps database (example)
+TRUSTED_APP_PATTERNS = {
+    "WhatsApp": {"microphone", "camera", "storage", "internet"},
+    "Google Maps": {"location", "internet", "storage"},
+    "Flashlight": {"camera"},
+}
+
+# Real-world justification examples for explanations
+PERMISSION_REAL_WORLD_EXAMPLES = {
+    "location": "Provides local weather forecasts or location-based features (e.g., Weather app).",
+    "internet": "Needed to fetch remote data, APIs, or sync content.",
+    "sms": "Used for OTP delivery or SMS-based verification (common in banking apps).",
+    "contacts": "Used to find friends or invite contacts in social apps.",
+    "camera": "Required to take photos or scan documents/QR codes.",
+    "microphone": "Needed for voice messages or voice capture features.",
+    "storage": "Required to save or read files and media.",
+    "accessibility": "Used by accessibility tools to assist users with disabilities.",
+    "overlay": "Draw over other apps for floating UI elements (rare; high risk).",
+    "device_admin": "Device administration for enterprise device management.",
+}
 
 def analyze_permissions(app_name: str, permissions: list) -> dict:
-    perms_lower = {p.lower().replace(" ", "_").replace("-", "_") for p in permissions}
+    # Normalize permission names
+    perms_normalized = [p.lower().replace(" ", "_").replace("-", "_") for p in permissions]
+    perms_lower = set(perms_normalized)
+
+    # Try to infer app category from name (simple heuristics)
+    name = app_name.lower()
+    category = None
+    if any(k in name for k in ("flash", "torch")):
+        category = "flashlight"
+    elif any(k in name for k in ("camera", "photo", "scan", "qr")):
+        category = "camera"
+    elif any(k in name for k in ("bank", "pay", "wallet")):
+        category = "banking"
+    elif any(k in name for k in ("chat", "msg", "social", "whatsapp", "telegram")):
+        category = "social"
+    elif any(k in name for k in ("game", "puzzle", "arcade")):
+        category = "game"
+    elif any(k in name for k in ("shop", "store", "buy", "amazon")):
+        category = "shopping"
+    else:
+        category = "utility"
 
     individual_risks = []
-    for perm in permissions:
-        key = perm.lower().replace(" ", "_").replace("-", "_")
-        risk_val = PERMISSION_BASE_RISK.get(key, 8)
-        individual_risks.append({"permission": perm, "risk": risk_val})
+    permission_analysis = []
+    anomalies = []
+    required_set = APP_CATEGORY_REQUIRED.get(category, set())
+    optional_set = APP_CATEGORY_OPTIONAL.get(category, set())
+    for orig, key in zip(permissions, perms_normalized):
+        lookup = key
+        why = PERMISSION_USAGE_HINTS.get(lookup, "This permission grants access to device capability.")
+
+        # Probability of necessity (0.0 - 1.0)
+        if lookup in required_set:
+            prob = 0.98
+        elif lookup in optional_set:
+            prob = 0.60
+        elif lookup in APP_CATEGORY_PERMISSIONS.get(category, set()):
+            prob = 0.75
+        else:
+            prob = 0.12
+
+        # Slightly increase probability if matches a trusted app pattern
+        for tperms in TRUSTED_APP_PATTERNS.values():
+            if lookup in tperms:
+                prob = min(1.0, prob + 0.08)
+                break
+
+        # Risk (0.0 - 1.0)
+        risk = round(max(0.0, min(1.0, 1.0 - prob)), 3)
+
+        # Anomaly flags
+        if risk > 0.7:
+            anomaly_level = "HIGH"
+            anomalies.append({"permission": orig, "risk": risk, "level": "HIGH"})
+        elif risk >= 0.4:
+            anomaly_level = "MEDIUM"
+            anomalies.append({"permission": orig, "risk": risk, "level": "MEDIUM"})
+        else:
+            anomaly_level = "LOW"
+
+        expected = lookup in APP_CATEGORY_PERMISSIONS.get(category, set())
+        why_expected = PERMISSION_USAGE_HINTS.get(lookup, "Commonly used for app features.") if expected else "Not typically required for this app category."
+        why_unusual = "" if expected else f"Unusual: {why}"
+        real_world = PERMISSION_REAL_WORLD_EXAMPLES.get(lookup, "Often used for related app functionality in real-world examples.")
+
+        individual_risks.append({
+            "permission": orig,
+            "key": lookup,
+            "probability_of_necessity": prob,
+            "risk": risk,
+            "anomaly_level": anomaly_level,
+            "why_expected": why_expected,
+            "why_unusual": why_unusual,
+            "real_world_justification": real_world,
+        })
+
+        # Permission analysis line
+        pct = int(prob * 100)
+        permission_analysis.append(f"{orig} → necessity_prob={prob:.2f} ({pct}%), risk={risk:.2f} ({anomaly_level})")
 
     combo_risks = []
     for combo, level, name, desc in DANGEROUS_COMBOS:
@@ -345,100 +598,207 @@ def analyze_permissions(app_name: str, permissions: list) -> dict:
             })
 
     # Score
+    # Base score: sum of individual risk weights
     base = sum(r["risk"] for r in individual_risks)
+    # Combo additions
     combo_score = sum(40 if r["risk_level"] == "CRITICAL" else 25 if r["risk_level"] == "HIGH" else 15
                       for r in combo_risks)
-    total = min(base + combo_score, 100)
 
-    if total >= 75:
-        risk_level = "CRITICAL"
-    elif total >= 55:
+    # Over-permissioning penalty: unexpected permissions increase risk
+    unexpected = [r for r in individual_risks if not r["expected_for_category"]]
+    over_penalty = sum(min(r["risk"], 30) for r in unexpected)
+
+    total = min(base + combo_score + int(over_penalty * 0.6), 100)
+
+    # Extra penalty: internet combined with many sensitive perms increases exfiltration risk
+    sensitive = {'contacts', 'storage', 'location', 'microphone', 'camera', 'read_sms', 'call_log', 'accounts'}
+    if 'internet' in perms_lower and len(perms_lower & sensitive) >= 2:
+        total = min(100, total + 18)
+    if 'internet' in perms_lower and len(perms_lower & sensitive) == 1:
+        total = min(100, total + 8)
+
+    if total >= 61:
         risk_level = "HIGH"
-    elif total >= 35:
+    elif total >= 31:
         risk_level = "MEDIUM"
-    elif total >= 15:
-        risk_level = "LOW"
     else:
         risk_level = "SAFE"
 
     recommendations = []
-    if total >= 55:
-        recommendations.append(f"DENY installation — {app_name} has an extremely dangerous permission profile")
-    if any(r["risk_level"] == "CRITICAL" for r in combo_risks):
-        recommendations.append("At least one CRITICAL permission combination was detected")
-    recommendations.append("Review permissions in phone Settings > Apps before granting")
+    if total >= 61:
+        recommendations.append(f"Avoid installing or uninstall — {app_name} requests high-risk permissions")
+    if combo_risks:
+        recommendations.append("Detected dangerous permission combinations — uninstall or deny permissions immediately")
+    recommendations.append("Review app permissions in Settings and deny anything not required for core functionality")
     if "internet" in perms_lower and len(perms_lower) > 5:
-        recommendations.append("This app with internet access can exfiltrate any data it collects")
+        recommendations.append("This app can transmit large amounts of data; consider denying network access or uninstalling")
+    # More tailored recommendations
+    if 'background' in perms_lower:
+        recommendations.append('Background execution detected — restrict when not essential')
+    if 'accessibility' in perms_lower or 'overlay' in perms_lower:
+        recommendations.append('Accessibility/overlay permissions are highly privileged — only allow for trusted apps')
+    # Per-unexpected permission advice
+    for u in unexpected:
+        recommendations.append(f"Permission '{u['permission']}' looks unnecessary for a {category} app. Consider denying it.")
+
+    # Trusted app comparison
+    similar = None
+    for tname, tperms in TRUSTED_APP_PATTERNS.items():
+        if perms_lower <= tperms or len(perms_lower & tperms) >= max(1, len(tperms)//2):
+            similar = tname
+            break
+    if similar:
+        recommendations.append(f"This app's permission set partially matches {similar} (trusted pattern). Still review unexpected permissions.")
+
+    # Final verdict mapping: Safe / Suspicious / High Risk
+    if total >= 61:
+        verdict = "High Risk"
+    elif total >= 31:
+        verdict = "Suspicious"
+    else:
+        verdict = "Safe"
+
+    # Reason: concise 1-2 lines
+    reasons = []
+    if unexpected:
+        reasons.append(f"Contains {len(unexpected)} unexpected permission(s) for a {category} app.")
+    if combo_risks:
+        reasons.append(f"Detected {len(combo_risks)} dangerous permission combination(s).")
+    if not reasons:
+        reasons.append("Permissions align with expected behavior for app category.")
+    reason_text = " ".join(reasons)[:240]
 
     return {
         "app_name": app_name,
         "privacy_risk_score": total,
         "risk_level": risk_level,
+        "app_category": category,
         "individual_permission_risks": individual_risks,
         "dangerous_combinations": combo_risks,
         "total_permissions": len(permissions),
+        "unexpected_permissions": [u['permission'] for u in unexpected],
+        "trusted_match": similar,
         "recommendations": recommendations,
+        # User-requested output summary fields
+        "permission_analysis": permission_analysis,
+        "final_risk_score": total,
+        "verdict": verdict,
+        "reason": reason_text,
     }
 
 
 # ─── Cyber Risk Score ────────────────────────────────────────────────────────
 
-QUESTION_WEIGHTS = {
-    "uses_2fa": -20,           # negative = good practice
-    "reuses_passwords": 25,
-    "updates_software": -10,
-    "uses_public_wifi": 15,
-    "backs_up_data": -5,
-    "uses_vpn": -10,
-    "clicks_unknown_links": 20,
-    "uses_password_manager": -15,
-    "shares_personal_info": 15,
-    "has_antivirus": -10,
+QUESTION_DEFINITIONS = {
+    "uses_2fa": True,
+    "reuses_passwords": False,
+    "updates_software": True,
+    "uses_public_wifi": False,
+    "backs_up_data": True,
+    "uses_vpn": True,
+    "clicks_unknown_links": False,
+    "uses_password_manager": True,
+    "shares_personal_info": False,
+    "has_antivirus": True,
 }
+
+# Weights represent how much each unsafe answer contributes to overall risk (sum = 100)
+QUESTION_WEIGHTS = {
+    "uses_2fa": 10,
+    "reuses_passwords": 15,
+    "updates_software": 10,
+    "uses_public_wifi": 12,
+    "backs_up_data": 8,
+    "uses_vpn": 8,
+    "clicks_unknown_links": 15,
+    "uses_password_manager": 10,
+    "shares_personal_info": 7,
+    "has_antivirus": 5,
+}
+
+# Per-question recommendation templates for unsafe answers
+QUESTION_RECOMMENDATIONS = {
+    "uses_2fa": "Enable two-factor authentication (2FA) on all important accounts (email, banking, cloud).",
+    "reuses_passwords": "Use a password manager and avoid reusing passwords across sites.",
+    "updates_software": "Turn on automatic updates for your OS and apps to receive security patches.",
+    "uses_public_wifi": "Avoid using public WiFi for sensitive tasks or use a trusted VPN when necessary.",
+    "backs_up_data": "Configure regular automated backups (cloud or offline) to protect against data loss and ransomware.",
+    "uses_vpn": "Consider using a reputable VPN when on untrusted networks to protect your traffic.",
+    "clicks_unknown_links": "Do not click links from unknown senders; instead visit the site directly or verify with the sender.",
+    "uses_password_manager": "Start using a password manager to generate and store unique, strong passwords.",
+    "shares_personal_info": "Limit sharing of personal information online and verify requests before disclosing sensitive data.",
+    "has_antivirus": "Install and keep reputable antivirus/endpoint protection up to date on your devices.",
+}
+
+def _answer_is_safe(question: str, answer) -> bool:
+    if isinstance(answer, str):
+        answer = answer.strip().lower()
+        if answer not in {"yes", "no", "true", "false"}:
+            return False
+        if answer in {"true", "yes"}:
+            answer = True
+        else:
+            answer = False
+    if isinstance(answer, bool):
+        expected_positive = QUESTION_DEFINITIONS.get(question, True)
+        return answer is expected_positive
+    return False
 
 
 def calculate_risk_score(answers: dict) -> dict:
-    base_score = 50
-    for question, weight in QUESTION_WEIGHTS.items():
-        if question in answers:
-            answer = answers[question]
-            if isinstance(answer, bool) and answer:
-                base_score += weight
-            elif answer == "yes":
-                base_score += weight
-            elif answer == "no":
-                base_score -= weight
+    # Compute weighted risk: each unsafe answer contributes its weight toward risk
+    total_questions = len(QUESTION_DEFINITIONS)
+    safe_answers = 0
+    unsafe_questions = []
+    accumulated_risk = 0
+    for question, expected in QUESTION_DEFINITIONS.items():
+        provided = answers.get(question, None)
+        is_safe = _answer_is_safe(question, provided) if provided is not None else False
+        if is_safe:
+            safe_answers += 1
+        else:
+            # If missing or unsafe answer, add weight to risk
+            weight = QUESTION_WEIGHTS.get(question, int(100 / total_questions))
+            accumulated_risk += weight
+            unsafe_questions.append(question)
 
-    score = max(0, min(100, base_score))
+    # Normalize accumulated_risk to 0-100 and clamp
+    score = max(0, min(int(accumulated_risk), 100))
 
-    if score >= 75:
+    # Risk level mapping (higher score => higher risk)
+    if score >= 80:
+        risk_level = "VERY HIGH RISK"
+        summary = "Multiple unsafe practices detected — immediate action recommended."
+    elif score >= 55:
         risk_level = "HIGH RISK"
-        summary = "Your digital security posture needs immediate improvement."
-    elif score >= 50:
+        summary = "Several risky behaviors detected — prioritize improvements soon."
+    elif score >= 35:
         risk_level = "MEDIUM RISK"
-        summary = "You have some good practices but several critical gaps."
-    elif score >= 25:
+        summary = "Moderate risk — good practices exist but there are clear weaknesses."
+    elif score >= 15:
         risk_level = "LOW RISK"
-        summary = "You follow good security practices. Keep it up!"
+        summary = "Relatively low risk, but a few improvements would increase safety."
     else:
         risk_level = "VERY LOW RISK"
-        summary = "Excellent security posture. You're well protected."
+        summary = "Your answers indicate strong security habits. Keep maintaining them."
 
+    # Generate tailored recommendations based on specific unsafe answers
     improvements = []
-    if answers.get("reuses_passwords") or answers.get("reuses_passwords") == "yes":
-        improvements.append("Use a password manager to create unique passwords for every account")
-    if not answers.get("uses_2fa") and answers.get("uses_2fa") != "yes":
-        improvements.append("Enable two-factor authentication on all critical accounts")
-    if answers.get("uses_public_wifi") or answers.get("uses_public_wifi") == "yes":
-        improvements.append("Use a VPN when connecting to public WiFi networks")
-    if answers.get("clicks_unknown_links") or answers.get("clicks_unknown_links") == "yes":
-        improvements.append("Never click links from unknown senders — navigate manually")
-    if not answers.get("backs_up_data") and answers.get("backs_up_data") != "yes":
-        improvements.append("Set up regular automated backups to protect against ransomware")
+    for q in unsafe_questions:
+        rec = QUESTION_RECOMMENDATIONS.get(q)
+        if rec and rec not in improvements:
+            improvements.append(rec)
+
+    # If user skipped questions, add a general suggestion to complete questionnaire
+    if len(answers) < total_questions:
+        improvements.append("Complete all security questions for a more accurate risk assessment.")
 
     return {
         "risk_score": score,
         "risk_level": risk_level,
         "summary": summary,
+        "safe_answers": safe_answers,
+        "total_questions": total_questions,
         "improvements": improvements,
+        "unsafe_questions": unsafe_questions,
     }

@@ -520,19 +520,28 @@ export default function AppPermissionAnalyzer() {
                             const riskPct = Math.min((item.risk / 40) * 100, 100);
                             const riskColor = item.risk >= 30 ? '#ff5c8e' : item.risk >= 20 ? '#ffb347' : item.risk >= 10 ? '#fce38a' : '#86efac';
                             return (
-                                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.75rem' }}>
-                                    <div style={{ width: '120px', fontSize: '0.85rem', color: '#e2e8f0', flexShrink: 0, fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>{item.permission}</div>
-                                    <div style={{ flex: 1, height: '8px', borderRadius: '4px', background: 'rgba(255,255,255,0.05)' }}>
-                                        <div style={{ 
-                                            height: '100%', 
-                                            width: `${riskPct}%`, 
-                                            borderRadius: '4px', 
-                                            background: riskColor, 
-                                            boxShadow: `0 0 8px ${riskColor}80`, 
-                                            transition: 'width 1s ease' 
-                                        }} />
+                                <div key={i} style={{ display: 'flex', gap: '1rem', marginBottom: '0.75rem', alignItems: 'flex-start' }}>
+                                    <div style={{ width: '140px', fontSize: '0.9rem', color: '#e2e8f0', flexShrink: 0, fontFamily: 'Rajdhani, sans-serif', fontWeight: 700 }}>{item.permission}</div>
+                                    <div style={{ flex: 1 }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                            <div style={{ flex: 1, height: '8px', borderRadius: '4px', background: 'rgba(255,255,255,0.05)' }}>
+                                                <div style={{ 
+                                                    height: '100%', 
+                                                    width: `${riskPct}%`, 
+                                                    borderRadius: '4px', 
+                                                    background: riskColor, 
+                                                    boxShadow: `0 0 8px ${riskColor}80`, 
+                                                    transition: 'width 1s ease' 
+                                                }} />
+                                            </div>
+                                            <div style={{ width: '48px', fontSize: '0.85rem', color: riskColor, fontWeight: 800, textAlign: 'right' }}>{item.risk}</div>
+                                        </div>
+                                        <div style={{ marginTop: '0.45rem', color: 'rgba(203,213,225,0.7)', fontSize: '0.9rem' }}>{item.human_explanation}</div>
                                     </div>
-                                    <div style={{ width: '40px', fontSize: '0.8rem', color: riskColor, fontWeight: 700, textAlign: 'right' }}>{item.risk}</div>
+                                    <div style={{ width: '160px', textAlign: 'right', flexShrink: 0 }}>
+                                        <div style={{ fontSize: '0.8rem', color: item.expected_for_category ? '#86efac' : '#ffb347', fontWeight: 700 }}>{item.expected_for_category ? 'Expected' : 'Unexpected'}</div>
+                                        <div style={{ fontSize: '0.75rem', color: 'rgba(203,213,225,0.6)', marginTop: '0.35rem' }}>{item.why_needed}</div>
+                                    </div>
                                 </div>
                             );
                         })}

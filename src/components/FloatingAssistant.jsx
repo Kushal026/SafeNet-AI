@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Shield, Loader, ChevronDown } from 'lucide-react';
+import { analyzePhishingEmail } from '../utils/aiEngine';
 
 const API_BASE = '/api';
 
@@ -18,13 +19,25 @@ function MarkdownText({ text }) {
                 const parts = line.split(/\*\*(.*?)\*\*/g);
                 const rendered = parts.map((p, j) => j % 2 === 1 ? <strong key={j} style={{ color: '#f1f5f9' }}>{p}</strong> : p);
                 if (line.startsWith('# ')) return <div key={i} style={{ fontWeight: 800, color: '#f1f5f9', marginBottom: '0.25rem' }}>{line.slice(2)}</div>;
-                if (line.startsWith('- ') || line.startsWith('• ')) return <div key={i} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.15rem' }}><span style={{ color: '#00ff88' }}>•</span><span>{rendered.slice(1)}</span></div>;
+                if (line.startsWith('- ') || line.startsWith('• ')) {
+                    const content = line.slice(2);
+                    const parts2 = content.split(/\*\*(.*?)\*\*/g);
+                    const rendered2 = parts2.map((p, j) => j % 2 === 1 ? <strong key={j} style={{ color: '#f1f5f9' }}>{p}</strong> : p);
+                    return <div key={i} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.15rem' }}><span style={{ color: '#00ff88' }}>•</span><span>{rendered2}</span></div>;
+                }
                 if (line.trim() === '') return <div key={i} style={{ height: '0.375rem' }} />;
                 return <div key={i}>{rendered}</div>;
             })}
         </div>
     );
 }
+    const LOCAL_ANSWERS = {
+        'How do I spot a phishing email?': `**Spot phishing by checking these core signals:**\n\n• **Sender & domain:** check the exact sender address and domain for lookalikes.\n• **Urgency & requests:** beware of pressure to click or provide credentials.\n• **Links & attachments:** hover to inspect links; avoid shortened URLs.\n\n**Immediate actions:**\n• Do NOT click links.\n• Verify with the company via official channels.\n\n**Verify:** reply with the sender address or paste the suspicious link for deeper analysis.`,
+
+        'Is public WiFi safe?': `**Public WiFi has inherent risks.**\n\n• **Avoid sensitive actions** (banking, email logins) on open WiFi.\n• **Use HTTPS & a VPN** when you must access sites.\n• **Verify the network name** with staff to avoid rogue hotspots.\n\n**Immediate actions:**\n• Use a trusted VPN when on public networks.\n• Turn off automatic network sharing.\n\n**Verify:** check whether the site shows HTTPS and a valid certificate before logging in.`,
+
+        'How to secure my accounts?': `**Quick account hardening checklist:**\n\n• **Enable 2FA** on email, cloud, and financial accounts.\n• **Use a password manager** to create unique passwords.\n• **Review recovery options** (phone/email) and remove outdated ones.\n\n**Immediate actions:**\n• Turn on 2FA for your primary email.\n• Generate unique passwords via a manager.\n\n**Verify:** confirm you can sign in with 2FA and that backup codes are stored securely.`,
+    };
 
 export default function FloatingAssistant({ isOpen, setIsOpen }) {
     const [messages, setMessages] = useState([
@@ -43,6 +56,27 @@ export default function FloatingAssistant({ isOpen, setIsOpen }) {
         const newMessages = [...messages, { role: 'user', content: message }];
         setMessages(newMessages);
         setLoading(true);
+
+        // Local quick answers for higher accuracy and faster responses
+        if (LOCAL_ANSWERS[message]) {
+            setMessages(prev => [...prev, { role: 'assistant', content: LOCAL_ANSWERS[message] }]);
+            setLoading(false);
+            return;
+        }
+
+        // Small heuristics: if user asks about phishing and pasted content, use local analyzer
+        const lower = message.toLowerCase();
+        if (lower.includes('phish') || lower.includes('phishing') || lower.includes('is this email')) {
+            try {
+                const local = analyzePhishingEmail(message);
+                const formatted = `**Threat:** ${local.threatLevel} (${local.riskScore}/100)\n\n**Findings:** ${local.findings.map(f=>f.type+': '+f.detail).slice(0,3).join('; ')}\n\n**Advice:** ${local.advice}`;
+                setMessages(prev => [...prev, { role: 'assistant', content: formatted }]);
+                setLoading(false);
+                return;
+            } catch (e) {
+                // fallthrough to backend
+            }
+        }
 
         try {
             const res = await fetch(`${API_BASE}/chat-assistant`, {
@@ -84,7 +118,7 @@ export default function FloatingAssistant({ isOpen, setIsOpen }) {
             {isOpen && (
                 <div style={{
                     position: 'fixed', bottom: '5.5rem', right: '2rem', zIndex: 999,
-                    width: '360px', height: '520px',
+                    width: '420px', height: '640px',
                     borderRadius: '20px', overflow: 'hidden',
                     background: 'rgba(13,17,23,0.95)', backdropFilter: 'blur(24px)',
                     border: '1px solid rgba(124,58,237,0.3)',
@@ -114,18 +148,18 @@ export default function FloatingAssistant({ isOpen, setIsOpen }) {
                     {/* Quick Questions */}
                     <div style={{ padding: '0.625rem 0.875rem', borderBottom: '1px solid rgba(255,255,255,0.04)', display: 'flex', gap: '0.375rem', flexWrap: 'wrap' }}>
                         {QUICK_QUESTIONS.map((q, i) => (
-                            <button key={i} onClick={() => send(q)} style={{ padding: '0.2rem 0.625rem', borderRadius: '20px', background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.2)', color: '#a78bfa', fontSize: '0.68rem', cursor: 'pointer' }}>
+                            <button key={i} onClick={() => send(q)} style={{ padding: '0.28rem 0.75rem', borderRadius: '20px', background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.2)', color: '#a78bfa', fontSize: '0.72rem', cursor: 'pointer' }}>
                                 {q}
                             </button>
                         ))}
                     </div>
 
                     {/* Messages */}
-                    <div style={{ flex: 1, overflowY: 'auto', padding: '0.875rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <div style={{ flex: 1, overflowY: 'auto', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                         {messages.map((msg, i) => (
                             <div key={i} style={{ display: 'flex', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
                                 <div style={{
-                                    maxWidth: '88%', padding: '0.625rem 0.875rem', borderRadius: msg.role === 'user' ? '14px 14px 4px 14px' : '14px 14px 14px 4px',
+                                    maxWidth: '92%', padding: '0.75rem 1rem', borderRadius: msg.role === 'user' ? '14px 14px 6px 14px' : '14px 14px 14px 6px',
                                     background: msg.role === 'user' ? 'linear-gradient(135deg, rgba(0,212,255,0.15), rgba(124,58,237,0.15))' : 'rgba(22,27,34,0.8)',
                                     border: msg.role === 'user' ? '1px solid rgba(0,212,255,0.2)' : '1px solid rgba(124,58,237,0.15)',
                                 }}>

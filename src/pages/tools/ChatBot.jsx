@@ -12,6 +12,15 @@ const QUICK_PROMPTS = [
     { text: 'Do I need a VPN?', icon: '🌐' },
 ];
 
+const LOCAL_ANSWERS = {
+    'Is this email phishing?': `**To check if an email is phishing:**\n\n• **Inspect the sender address and domain** for small misspellings or unfamiliar hosts.\n• **Look for urgency or requests for credentials**, which are common phishing tactics.\n• **Do not click links or open attachments** without verifying.\n\n**Immediate actions:** Verify the sender via official channels and do not provide credentials.\n**Verify:** paste the sender address or suspicious link here for analysis.`,
+    'Is public WiFi safe?': `**Public WiFi risks:**\n\n• Avoid sensitive activities on open WiFi.\n• Use a trusted VPN and ensure sites use HTTPS.\n\n**Immediate actions:** enable your VPN and disable sharing.\n**Verify:** check the HTTPS lock icon and certificate before logging in.`,
+    'Create strong password': `**Strong password tips:**\n\n• Use a passphrase of 3–4 random words or a password manager to generate a 16+ char password.\n• Include uppercase, lowercase, numbers, and symbols.\n\n**Immediate actions:** create a unique password with a password manager.\n**Verify:** run the password through the password checker tool in this app.`,
+    'What is 2FA?': `**Two-factor authentication (2FA)** adds a second verification step beyond your password (e.g., SMS, authenticator app, hardware key).\n\n**Immediate actions:** enable 2FA on your primary email and financial accounts.\n**Verify:** attempt a login to confirm 2FA prompts appear.`,
+    'Phone malware signs?': `**Signs of phone malware:**\n\n• Rapid battery drain, unexplained data usage, or unfamiliar apps.\n• Popups asking for permissions or credentials.\n\n**Immediate actions:** uninstall suspicious apps, run a reputable mobile scanner, and change passwords if data exposure suspected.\n**Verify:** monitor data usage and app permissions after cleanup.`,
+    'Do I need a VPN?': `**Use a VPN when:**\n\n• You are on untrusted networks (public WiFi) or want to protect metadata from third parties.\n• You need to access region-restricted services securely.\n\n**Immediate actions:** install a reputable VPN and enable it on public networks.\n**Verify:** confirm your IP and location behave as expected after connecting.`,
+};
+
 function MarkdownText({ text }) {
     const lines = text.split('\n');
     return (
@@ -24,7 +33,12 @@ function MarkdownText({ text }) {
                 
                 if (line.startsWith('# ')) return <h3 key={i} style={{ fontSize: '1.1rem', fontWeight: 800, color: '#f1f5f9', margin: '1rem 0 0.5rem', fontFamily: 'Orbitron, sans-serif' }}>{line.slice(2)}</h3>;
                 if (line.startsWith('## ')) return <h4 key={i} style={{ fontSize: '0.95rem', fontWeight: 700, color: '#00d4ff', margin: '0.75rem 0 0.25rem', fontFamily: 'Rajdhani, sans-serif' }}>{line.slice(3)}</h4>;
-                if (line.startsWith('- ') || line.startsWith('• ')) return <div key={i} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.35rem', paddingLeft: '0.25rem' }}><span style={{ color: '#00ff88', flexShrink: 0 }}>▸</span><span>{rendered.slice(1)}</span></div>;
+                if (line.startsWith('- ') || line.startsWith('• ')) {
+                    const content = line.slice(2);
+                    const parts2 = content.split(/\*\*(.*?)\*\*/g);
+                    const rendered2 = parts2.map((part, j) => j % 2 === 1 ? <strong key={j} style={{ color: '#f1f5f9', fontWeight: 700 }}>{part}</strong> : part);
+                    return <div key={i} style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.35rem', paddingLeft: '0.25rem' }}><span style={{ color: '#00ff88', flexShrink: 0 }}>▸</span><span>{rendered2}</span></div>;
+                }
                 if (line.startsWith('✅')) return <div key={i} style={{ marginBottom: '0.35rem', color: '#00ff88' }}>{rendered}</div>;
                 if (line.startsWith('⚠')) return <div key={i} style={{ marginBottom: '0.35rem', color: '#ff9500' }}>{rendered}</div>;
                 if (line.startsWith('❌')) return <div key={i} style={{ marginBottom: '0.35rem', color: '#ff2d55' }}>{rendered}</div>;
@@ -76,6 +90,12 @@ export default function ChatBot() {
         const newMessages = [...messages, { role: 'user', content: msg }];
         setMessages(newMessages);
         setLoading(true);
+        // Local quick prompts handled for accuracy
+        if (LOCAL_ANSWERS[msg]) {
+            setMessages(prev => [...prev, { role: 'assistant', content: LOCAL_ANSWERS[msg] }]);
+            setLoading(false);
+            return;
+        }
 
         try {
             const res = await fetch(`${API_BASE}/chat-assistant`, {
@@ -98,7 +118,7 @@ export default function ChatBot() {
     const clearChat = () => setMessages([messages[0]]);
 
     return (
-        <div style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', height: 'calc(100vh - 120px)' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', height: 'calc(100vh - 120px)' }}>
             {/* Header */}
             <div style={{
                 display: 'flex',
@@ -232,8 +252,8 @@ export default function ChatBot() {
                             </div>
                         )}
                         <div style={{
-                            maxWidth: '80%',
-                            padding: '1rem 1.25rem',
+                            maxWidth: '90%',
+                            padding: '1.1rem 1.4rem',
                             borderRadius: msg.role === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
                             background: msg.role === 'user'
                                 ? 'linear-gradient(135deg, rgba(100,181,246,0.25), rgba(0,212,255,0.15))'
