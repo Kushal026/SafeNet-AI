@@ -7,10 +7,10 @@
   --cyber-pink: #ff2d55;
   --cyber-orange: #ff9500;
   --cyber-yellow: #ffd60a;
-  --dark-bg: #050816;
-  --dark-surface: rgba(5, 8, 22, 0.85);
-  --glass-bg: rgba(15, 23, 42, 0.6);
-  --glass-border: rgba(0, 212, 255, 0.15);
+  --dark-bg: #0a0f1e;
+  --dark-surface: rgba(15, 23, 42, 0.85);
+  --glass-bg: rgba(30, 41, 59, 0.4);
+  --glass-border: rgba(0, 212, 255, 0.1);
 }
 
 * {
@@ -31,7 +31,7 @@ body {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(5, 8, 22, 0.5);
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: rgba(0, 212, 255, 0.3);

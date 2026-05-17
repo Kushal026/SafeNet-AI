@@ -7,31 +7,31 @@ const API_BASE = '/api';
 const TOOLS = [
     {
         id: 1, icon: Eye, title: 'Phishing Detector', desc: 'Analyze emails for phishing indicators and social engineering.',
-        color: '#00d4ff', tag: 'Email', path: '/tools/phishing',
+        color: '#64b5f6', tag: 'Email', path: '/tools/phishing',
     },
     {
         id: 2, icon: Globe, title: 'URL Scanner', desc: 'Check URLs for malware and brand impersonation.',
-        color: '#a78bfa', tag: 'Web', path: '/tools/url-scanner',
+        color: '#64b5f6', tag: 'Web', path: '/tools/url-scanner',
     },
     {
         id: 3, icon: Shield, title: 'App Permissions', desc: 'Detect risky permission combinations in apps.',
-        color: '#ff9500', tag: 'Mobile', path: '/tools/app-permissions',
+        color: '#64b5f6', tag: 'Mobile', path: '/tools/app-permissions',
     },
     {
         id: 4, icon: Lock, title: 'Password Analyzer', desc: 'Evaluate password strength and breach status.',
-        color: '#00ff88', tag: 'Auth', path: '/tools/password',
+        color: '#64b5f6', tag: 'Auth', path: '/tools/password',
     },
     {
         id: 5, icon: MessageSquare, title: 'AI Assistant', desc: 'Ask cybersecurity questions to our AI.',
-        color: '#7c3aed', tag: 'AI', path: '/tools/chatbot',
+        color: '#64b5f6', tag: 'AI', path: '/tools/chatbot',
     },
     {
         id: 6, icon: Activity, title: 'Cyber Risk Score', desc: 'Assess your personal security posture.',
-        color: '#ff2d55', tag: 'Risk', path: '/tools/risk-score',
+        color: '#64b5f6', tag: 'Risk', path: '/tools/risk-score',
     },
     {
         id: 7, icon: BarChart3, title: 'Threat Intel', desc: 'Monitor global cyber threats and trends.',
-        color: '#ffd60a', tag: 'Intel', path: '/tools/threat-intel',
+        color: '#64b5f6', tag: 'Intel', path: '/tools/threat-intel',
     },
 ];
 

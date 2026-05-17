@@ -1,0 +1,4 @@
+url,label,threat_score
+http://malicious.example/login,phishing,0.98
+http://suspicious.example/reset,phishing,0.87
+http://benign.example/home,benign,0.01

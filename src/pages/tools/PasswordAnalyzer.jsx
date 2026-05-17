@@ -4,77 +4,77 @@ import { Lock, Eye, EyeOff, AlertTriangle, CheckCircle, Loader, Shield, Activity
 const API_BASE = '/api';
 
 const STRENGTH_CONFIG = {
-    'Very Weak': { color: '#ff2d55', bg: 'rgba(255,45,85,0.15)', border: 'rgba(255,45,85,0.4)', label: 'VERY WEAK' },
-    'Weak':      { color: '#ff9500', bg: 'rgba(255,149,0,0.15)', border: 'rgba(255,149,0,0.4)', label: 'WEAK' },
-    'Moderate':  { color: '#ffd60a', bg: 'rgba(255,214,10,0.15)', border: 'rgba(255,214,10,0.4)', label: 'MODERATE' },
-    'Strong':    { color: '#00d4ff', bg: 'rgba(0,212,255,0.15)', border: 'rgba(0,212,255,0.4)', label: 'STRONG' },
-    'Very Strong': { color: '#00ff88', bg: 'rgba(0,255,136,0.15)', border: 'rgba(0,255,136,0.4)', label: 'VERY STRONG' },
+    'Very Weak': { color: '#64b5f6', bg: 'rgba(100,181,246,0.15)', border: 'rgba(100,181,246,0.4)', label: 'VERY WEAK' },
+    'Weak':      { color: '#64b5f6', bg: 'rgba(100,181,246,0.15)', border: 'rgba(100,181,246,0.4)', label: 'WEAK' },
+    'Moderate':  { color: '#64b5f6', bg: 'rgba(100,181,246,0.15)', border: 'rgba(100,181,246,0.4)', label: 'MODERATE' },
+    'Strong':    { color: '#64b5f6', bg: 'rgba(100,181,246,0.15)', border: 'rgba(100,181,246,0.4)', label: 'STRONG' },
+    'Very Strong': { color: '#64b5f6', bg: 'rgba(100,181,246,0.15)', border: 'rgba(100,181,246,0.4)', label: 'VERY STRONG' },
 };
 
 function AnalyzingAnimation() {
-    return (
-        <div style={{ textAlign: 'center', padding: '3rem' }}>
-            <div style={{ position: 'relative', width: '140px', height: '140px', margin: '0 auto 1.5rem' }}>
-                {/* Rotating rings */}
-                {[0,1,2].map(i => (
-                    <div key={i} style={{
-                        position: 'absolute', inset: `${i * 15}px`,
-                        borderRadius: '50%',
-                        border: `2px solid rgba(0,255,136,${0.3 - i * 0.08})`,
-                        borderTopColor: 'transparent',
-                        animation: `spin ${2 - i * 0.4}s linear infinite`,
-                    }} />
-                ))}
-                {/* Center lock */}
-                <div style={{ 
-                    position: 'absolute', top: '50%', left: '50%', 
-                    transform: 'translate(-50%,-50%)',
-                    width: '50px', height: '50px', borderRadius: '50%',
-                    background: 'rgba(0,255,136,0.1)',
-                    border: '2px solid rgba(0,255,136,0.3)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center'
-                }}>
-                    <Key size={22} style={{ color: '#00ff88', filter: 'drop-shadow(0 0 8px rgba(0,255,136,0.5))' }} />
-                </div>
-            </div>
-            <div style={{ 
-                color: '#00ff88', 
-                fontFamily: 'Orbitron, sans-serif', 
-                fontSize: '1rem', 
-                marginBottom: '0.75rem',
-                letterSpacing: '0.1em',
-                textShadow: '0 0 10px rgba(0,255,136,0.5)'
-            }}>
-                ANALYZING PASSWORD
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
-                {[0,1,2,3,4].map(i => (
-                    <div key={i} style={{ 
-                        width: '10px', height: '10px', borderRadius: '50%', 
-                        background: '#00ff88',
-                        animation: `pulse 1s ease-in-out ${i * 0.15}s infinite`,
-                        boxShadow: '0 0 10px rgba(0,255,136,0.5)'
-                    }} />
-                ))}
-            </div>
-            <div style={{ 
-                marginTop: '1.5rem',
-                padding: '0.75rem 1.5rem',
-                background: 'rgba(0,255,136,0.08)',
-                borderRadius: '8px',
-                border: '1px solid rgba(0,255,136,0.2)',
-                display: 'inline-block'
-            }}>
-                <div style={{ 
-                    fontSize: '0.75rem', 
-                    color: 'rgba(203,213,225,0.6)',
-                    fontFamily: 'JetBrains Mono, monospace'
-                }}>
-                    Checking: entropy • dictionary • patterns • breach status
-                </div>
-            </div>
+  return (
+    <div style={{ textAlign: 'center', padding: '3rem' }}>
+      <div style={{ position: 'relative', width: '140px', height: '140px', margin: '0 auto 1.5rem' }}>
+        {/* Rotating rings */}
+        {[0,1,2].map(i => (
+          <div key={i} style={{
+            position: 'absolute', inset: `${i * 15}px`,
+            borderRadius: '50%',
+            border: `2px solid rgba(100,181,246,${0.3 - i * 0.08})`,
+            borderTopColor: 'transparent',
+            animation: `spin ${2 - i * 0.4}s linear infinite`,
+          }} />
+        ))}
+        {/* Center lock */}
+        <div style={{
+          position: 'absolute', top: '50%', left: '50%',
+          transform: 'translate(-50%,-50%)',
+          width: '50px', height: '50px', borderRadius: '50%',
+          background: 'rgba(100,181,246,0.1)',
+          border: '2px solid rgba(100,181,246,0.3)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center'
+        }}>
+          <Key size={22} style={{ color: '#64b5f6', filter: 'drop-shadow(0 0 8px rgba(100,181,246,0.5))' }} />
         </div>
-    );
+      </div>
+      <div style={{
+        color: '#64b5f6',
+        fontFamily: 'Orbitron, sans-serif',
+        fontSize: '1rem',
+        marginBottom: '0.75rem',
+        letterSpacing: '0.1em',
+        textShadow: '0 0 10px rgba(100,181,246,0.5)'
+      }}>
+        ANALYZING PASSWORD
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
+        {[0,1,2,3,4].map(i => (
+          <div key={i} style={{
+            width: '10px', height: '10px', borderRadius: '50%',
+            background: '#64b5f6',
+            animation: `pulse 1s ease-in-out ${i * 0.15}s infinite`,
+            boxShadow: '0 0 10px rgba(100,181,246,0.5)'
+          }} />
+        ))}
+      </div>
+      <div style={{
+        marginTop: '1.5rem',
+        padding: '0.75rem 1.5rem',
+        background: 'rgba(100,181,246,0.08)',
+        borderRadius: '8px',
+        border: '1px solid rgba(100,181,246,0.2)',
+        display: 'inline-block'
+      }}>
+        <div style={{
+          fontSize: '0.75rem',
+          color: 'rgba(203,213,225,0.6)',
+          fontFamily: 'JetBrains Mono, monospace'
+        }}>
+          Checking: entropy • dictionary • patterns • breach status
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function StrengthMeter({ strength, score }) {
@@ -192,25 +192,25 @@ export default function PasswordAnalyzer() {
         <div style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 1.5rem' }}>
             {/* Header */}
             <div style={{ marginBottom: '2.5rem', textAlign: 'center' }}>
-                <div style={{ 
-                    display: 'inline-flex', alignItems: 'center', gap: '0.5rem', 
-                    padding: '0.5rem 1rem', borderRadius: '100px', 
-                    background: 'rgba(0,255,136,0.08)', 
-                    border: '1px solid rgba(0,255,136,0.2)', 
-                    marginBottom: '1rem' 
+                <div style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+                    padding: '0.5rem 1rem', borderRadius: '100px',
+                    background: 'rgba(100,181,246,0.08)',
+                    border: '1px solid rgba(100,181,246,0.2)',
+                    marginBottom: '1rem'
                 }}>
-                    <Shield size={14} style={{ color: '#00ff88' }} />
-                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#00ff88', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif', textTransform: 'uppercase' }}>
+                    <Shield size={14} style={{ color: '#64b5f6' }} />
+                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#64b5f6', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif', textTransform: 'uppercase' }}>
                         Security Analysis
                     </span>
                 </div>
                 
-                <h1 style={{ 
-                    fontSize: '2.5rem', fontWeight: 900, color: '#f8fafc', 
+                <h1 style={{
+                    fontSize: '2.5rem', fontWeight: 900, color: '#f8fafc',
                     marginBottom: '0.75rem', fontFamily: 'Orbitron, sans-serif',
                     letterSpacing: '0.02em'
                 }}>
-                    <span style={{ color: '#00ff88' }}>Password</span> Analyzer
+                    <span style={{ color: '#64b5f6' }}>Password</span> Analyzer
                 </h1>
                 <p style={{ 
                     color: 'rgba(203,213,225,0.6)', 
@@ -270,12 +270,12 @@ export default function PasswordAnalyzer() {
                     Your password is never stored. Only k-anonymity hash is sent for breach check.
                 </div>
                 
-                <button 
+                <button
                     onClick={analyze}
                     disabled={loading || !password}
                     className="btn-cyber"
-                    style={{ 
-                        background: 'linear-gradient(135deg, #00ff88, #00d4ff)',
+                    style={{
+                        background: 'linear-gradient(135deg, #64b5f6, #64b5f6)',
                         padding: '1rem 2rem',
                         width: '100%'
                     }}

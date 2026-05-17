@@ -22,17 +22,17 @@ export default function Navbar() {
     return (
         <nav style={{ background: 'rgba(2,4,8,0.95)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(0,212,255,0.12)', position: 'sticky', top: 0, zIndex: 100 }}>
             <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem', display: 'flex', alignItems: 'center', height: '64px', justifyContent: 'space-between' }}>
-                {/* Logo */}
-                <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
-                    <div style={{ position: 'relative', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <div style={{ position: 'absolute', inset: 0, borderRadius: '8px', background: 'linear-gradient(135deg, #00d4ff, #7c3aed)', opacity: 0.2 }} />
-                        <Shield size={22} style={{ color: '#00d4ff', position: 'relative', zIndex: 1 }} />
-                    </div>
-                    <div>
-                        <span style={{ fontWeight: 800, fontSize: '1.1rem', background: 'linear-gradient(90deg, #00d4ff, #7c3aed)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>SafeNet</span>
-                        <span style={{ fontWeight: 800, fontSize: '1.1rem', color: '#00ff88' }}>-AI</span>
-                    </div>
-                </Link>
+                 {/* Logo */}
+                 <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
+                     <div style={{ position: 'relative', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                         <div style={{ position: 'absolute', inset: 0, borderRadius: '8px', background: 'linear-gradient(135deg, #00d4ff, #7c3aed)', opacity: 0.2 }} />
+                         <Shield size={22} style={{ color: '#00d4ff', position: 'relative', zIndex: 1 }} />
+                     </div>
+                     <div>
+                         <span style={{ fontWeight: 800, fontSize: '1.1rem', color: '#f8fafc' }}>SafeNet</span>
+                         <span style={{ fontWeight: 800, fontSize: '1.1rem', color: '#a78bfa' }}>-AI</span>
+                     </div>
+                 </Link>
 
                 {/* Desktop Links */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }} className="desktop-links">

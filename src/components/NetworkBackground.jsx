@@ -16,7 +16,7 @@ export default function NetworkBackground() {
     }, []);
 
     if (!init) {
-        return <div style={{position: 'fixed', inset: 0, zIndex: -1, background: 'linear-gradient(180deg, #0a1628 0%, #050a12 50%, #020408 100%)'}}/>;
+        return <div style={{position: 'fixed', inset: 0, zIndex: -1, background: '#02060f'}}/>;
     }
 
     return (
@@ -29,7 +29,7 @@ export default function NetworkBackground() {
                         value: "transparent",
                     },
                 },
-                fpsLimit: 60,
+                fpsLimit: 45,
                 interactivity: {
                     events: {
                         onClick: {
@@ -44,28 +44,26 @@ export default function NetworkBackground() {
                     },
                     modes: {
                         push: {
-                            quantity: 4,
+                            quantity: 2,
                         },
                         repulse: {
                             distance: 100,
-                            duration: 0.4,
+                            duration: 0.35,
                         },
                     },
                 },
                 particles: {
                     color: {
-                        value: '#1e90ff', // glowing blue nodes
+                        value: '#7f95a2', // soft neutral nodes
                     },
                     links: {
-                        color: '#00bfff', // neon blue lines
-                        distance: 150,
+                        color: '#6d8ca4',
+                        distance: 120,
                         enable: true,
-                        opacity: 0.4,
+                        opacity: 0.18,
                         width: 1,
                         triangles: {
-                            enable: true,
-                            opacity: 0.05,
-                            color: "#00d4ff"
+                            enable: false,
                         }
                     },
                     collisions: {
@@ -78,40 +76,40 @@ export default function NetworkBackground() {
                             default: "bounce",
                         },
                         random: true,
-                        speed: 0.5,
+                        speed: 0.15,
                         straight: false,
                     },
                     number: {
                         density: {
                             enable: true,
-                            area: 800,
+                            area: 2200,
                         },
-                        value: 80,
+                        value: 32,
                     },
                     opacity: {
-                        value: 0.8,
+                        value: 0.60,
                         animation: {
                             enable: true,
-                            speed: 1,
-                            minimumValue: 0.3,
+                            speed: 0.4,
+                            minimumValue: 0.1,
                         }
                     },
                     shape: {
                         type: "circle",
                     },
                     size: {
-                        value: { min: 1, max: 3 },
+                        value: { min: 0.8, max: 1.6 },
                         animation: {
                             enable: true,
-                            speed: 2,
-                            minimumValue: 0.1,
+                            speed: 0.6,
+                            minimumValue: 0.2,
                             sync: false
                         }
                     },
                     shadow: {
                         enable: true,
-                        color: "#1e90ff",
-                        blur: 10
+                        color: "#7f95a2",
+                        blur: 8,
                     }
                 },
                 detectRetina: true,
@@ -123,7 +121,7 @@ export default function NetworkBackground() {
                 width: "100%",
                 height: "100%",
                 zIndex: -1,
-                background: 'linear-gradient(180deg, #0a1628 0%, #050a12 50%, #020408 100%)'
+                background: '#02060f'
             }}
         />
     );

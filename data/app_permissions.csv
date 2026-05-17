@@ -1,0 +1,4 @@
+app,permission,granted,permission_type
+com.example.chat,READ_CONTACTS,True,dangerous
+com.example.browser,INTERNET,True,normal
+com.example.camera,CAMERA,False,dangerous

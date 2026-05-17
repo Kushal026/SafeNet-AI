@@ -6,11 +6,11 @@ const API_BASE = '/api';
 
 const FEATURES = [
     { icon: Eye, title: 'AI Phishing Detection', desc: 'Analyze suspicious emails and messages for phishing indicators in real-time.', color: '#00d4ff', path: '/tools/phishing' },
-    { icon: Globe, title: 'URL Safety Scanner', desc: 'Check any website URL for malicious content, brand impersonation, and phishing.', color: '#a78bfa', path: '/tools/url-scanner' },
-    { icon: Lock, title: 'Password Strength AI', desc: 'Evaluate password entropy, crack time, and get AI-powered improvement tips.', color: '#00ff88', path: '/tools/password' },
-    { icon: MessageSquare, title: 'AI Security Assistant', desc: 'Ask any cybersecurity question. Get expert answers from SafeNet AI.', color: '#ff9500', path: '/tools/chatbot' },
-    { icon: Zap, title: 'App Permission Analyzer', desc: 'Identify dangerous permission combinations that put your privacy at risk.', color: '#ff2d55', path: '/tools/app-permissions' },
-    { icon: BarChart3, title: 'Threat Intelligence', desc: 'Live cybersecurity trends, attack statistics, and threat landscape data.', color: '#7c3aed', path: '/tools/threat-intel' },
+    { icon: Globe, title: 'URL Safety Scanner', desc: 'Check any website URL for malicious content, brand impersonation, and phishing.', color: '#00d4ff', path: '/tools/url-scanner' },
+    { icon: Lock, title: 'Password Strength AI', desc: 'Evaluate password entropy, crack time, and get AI-powered improvement tips.', color: '#00d4ff', path: '/tools/password' },
+    { icon: MessageSquare, title: 'AI Security Assistant', desc: 'Ask any cybersecurity question. Get expert answers from SafeNet AI.', color: '#00d4ff', path: '/tools/chatbot' },
+    { icon: Zap, title: 'App Permission Analyzer', desc: 'Identify dangerous permission combinations that put your privacy at risk.', color: '#00d4ff', path: '/tools/app-permissions' },
+    { icon: BarChart3, title: 'Threat Intelligence', desc: 'Live cybersecurity trends, attack statistics, and threat landscape data.', color: '#00d4ff', path: '/tools/threat-intel' },
 ];
 
 export default function LandingPage() {
@@ -319,7 +319,7 @@ export default function LandingPage() {
             {/* CTA SECTION */}
             <section style={{ padding: '8rem 2rem', textAlign: 'center' }}>
                 <div style={{ maxWidth: '700px', margin: '0 auto' }}>
-                    <Shield size={72} style={{ color: '#00ff88', marginBottom: '2rem', filter: 'drop-shadow(0 0 20px rgba(0,255,136,0.5))' }} />
+                    <Shield size={72} style={{ color: '#00d4ff', marginBottom: '2rem', filter: 'drop-shadow(0 0 20px rgba(0,255,136,0.5))' }} />
                     <h2 style={{ 
                         fontSize: '2.5rem', 
                         fontWeight: 800, 
@@ -353,13 +353,14 @@ export default function LandingPage() {
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
                     <Shield size={28} style={{ color: '#00d4ff' }} />
-                    <span style={{ fontSize: '1.35rem', fontWeight: 800, color: '#f8fafc', fontFamily: 'Orbitron, sans-serif' }}>SafeNet-AI</span>
+                    <span style={{ fontSize: '1.35rem', fontWeight: 800, color: '#f8fafc', fontFamily: 'Orbitron, sans-serif' }}>SafeNet</span>
+                    <span style={{ fontSize: '1.35rem', fontWeight: 800, color: '#a78bfa', fontFamily: 'Orbitron, sans-serif' }}>-AI</span>  
                 </div>
                 <p style={{ fontSize: '0.85rem', color: 'rgba(203,213,225,0.5)', marginBottom: '0.5rem', fontFamily: 'Rajdhani, sans-serif' }}>
                     Intelligent AI-Powered Cybersecurity Platform
                 </p>
                 <p style={{ fontSize: '0.75rem', color: 'rgba(203,213,225,0.35)' }}>
-                    © 2024 SafeNet-AI. All systems operational.
+                    © 2026 SafeNet-AI. All systems operational.
                 </p>
             </footer>
         </div>

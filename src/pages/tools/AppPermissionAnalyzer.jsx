@@ -10,11 +10,11 @@ const COMMON_PERMISSIONS = [
 ];
 
 const RISK_COLORS = {
-    CRITICAL: '#ff2d55',
-    HIGH: '#ff9500',
-    MEDIUM: '#ffd60a',
-    LOW: '#00d4ff',
-    SAFE: '#00ff88',
+    CRITICAL: '#64b5f6',
+    HIGH: '#64b5f6',
+    MEDIUM: '#64b5f6',
+    LOW: '#64b5f6',
+    SAFE: '#64b5f6',
 };
 
 const SAMPLE_APPS = [
@@ -32,7 +32,7 @@ function AnalyzingAnimation() {
                     <div key={i} style={{
                         position: 'absolute', inset: `${i * 15}px`,
                         borderRadius: '50%',
-                        border: `2px solid rgba(255,149,0,${0.3 - i * 0.08})`,
+                        border: `2px solid rgba(255,179,71,${0.3 - i * 0.08})`,
                         borderBottomColor: 'transparent',
                         animation: `spin ${2 - i * 0.4}s linear infinite`,
                     }} />
@@ -42,20 +42,20 @@ function AnalyzingAnimation() {
                     position: 'absolute', top: '50%', left: '50%', 
                     transform: 'translate(-50%,-50%)',
                     width: '50px', height: '50px', borderRadius: '50%',
-                    background: 'rgba(255,149,0,0.1)',
-                    border: '2px solid rgba(255,149,0,0.4)',
+                    background: 'rgba(255,179,71,0.1)',
+                    border: '2px solid rgba(255,179,71,0.4)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center'
                 }}>
-                    <AppWindow size={22} style={{ color: '#ff9500', filter: 'drop-shadow(0 0 8px rgba(255,149,0,0.5))' }} />
+                    <AppWindow size={22} style={{ color: '#ffb347', filter: 'drop-shadow(0 0 8px rgba(255,179,71,0.5))' }} />
                 </div>
             </div>
             <div style={{ 
-                color: '#ff9500', 
+                color: '#ffb347', 
                 fontFamily: 'Orbitron, sans-serif', 
                 fontSize: '1rem', 
                 marginBottom: '0.75rem',
                 letterSpacing: '0.1em',
-                textShadow: '0 0 10px rgba(255,149,0,0.5)'
+                textShadow: '0 0 10px rgba(255,179,71,0.5)'
             }}>
                 ANALYZING PERMISSIONS
             </div>
@@ -63,18 +63,18 @@ function AnalyzingAnimation() {
                 {[0,1,2,3,4].map(i => (
                     <div key={i} style={{ 
                         width: '10px', height: '10px', borderRadius: '50%', 
-                        background: '#ff9500',
+                        background: '#ffb347',
                         animation: `pulse 1s ease-in-out ${i * 0.15}s infinite`,
-                        boxShadow: '0 0 10px rgba(255,149,0,0.5)'
+                        boxShadow: '0 0 10px rgba(255,179,71,0.5)'
                     }} />
                 ))}
             </div>
             <div style={{ 
                 marginTop: '1.5rem',
                 padding: '0.75rem 1.5rem',
-                background: 'rgba(255,149,0,0.08)',
+                background: 'rgba(255,179,71,0.08)',
                 borderRadius: '8px',
-                border: '1px solid rgba(255,149,0,0.2)',
+                border: '1px solid rgba(255,179,71,0.2)',
                 display: 'inline-block'
             }}>
                 <div style={{ 
@@ -139,12 +139,12 @@ export default function AppPermissionAnalyzer() {
                 <div style={{ 
                     display: 'inline-flex', alignItems: 'center', gap: '0.5rem', 
                     padding: '0.5rem 1rem', borderRadius: '100px', 
-                    background: 'rgba(255,149,0,0.08)', 
-                    border: '1px solid rgba(255,149,0,0.2)', 
+                    background: 'rgba(0,212,255,0.08)', 
+                    border: '1px solid rgba(0,212,255,0.2)', 
                     marginBottom: '1rem' 
                 }}>
-                    <AlertOctagon size={14} style={{ color: '#ff9500' }} />
-                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#ff9500', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif', textTransform: 'uppercase' }}>
+                    <AlertOctagon size={14} style={{ color: '#ffb347' }} />
+                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#ffb347', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif', textTransform: 'uppercase' }}>
                         Privacy Analysis
                     </span>
                 </div>
@@ -154,7 +154,7 @@ export default function AppPermissionAnalyzer() {
                     marginBottom: '0.75rem', fontFamily: 'Orbitron, sans-serif',
                     letterSpacing: '0.02em'
                 }}>
-                    <span style={{ color: '#ff9500' }}>App Permission</span> Analyzer
+                    <span style={{ color: '#ffb347' }}>App Permission</span> Analyzer
                 </h1>
                 <p style={{ 
                     color: 'rgba(203,213,225,0.6)', 
@@ -174,9 +174,9 @@ export default function AppPermissionAnalyzer() {
                         style={{ 
                             padding: '0.4rem 1rem', 
                             borderRadius: '8px', 
-                            background: 'rgba(255,149,0,0.08)', 
-                            border: '1px solid rgba(255,149,0,0.25)', 
-                            color: '#ff9500', 
+                            background: 'rgba(255,179,71,0.08)', 
+                            border: '1px solid rgba(255,179,71,0.25)', 
+                            color: '#ffb347', 
                             fontSize: '0.8rem', 
                             cursor: 'pointer', 
                             fontWeight: 600,
@@ -191,8 +191,7 @@ export default function AppPermissionAnalyzer() {
             {/* Input Area */}
             <div className="glass-panel" style={{ 
                 padding: '1.5rem', 
-                marginBottom: '1.5rem',
-                border: '1px solid rgba(255,149,0,0.15)'
+                marginBottom: '1.5rem'
             }}>
                 <div style={{ marginBottom: '1.5rem' }}>
                     <label style={{ 
@@ -243,10 +242,10 @@ export default function AppPermissionAnalyzer() {
                                     fontSize: '0.8rem', 
                                     fontWeight: 600, 
                                     transition: 'all 0.2s',
-                                    background: permissions.includes(perm) ? 'rgba(255,149,0,0.2)' : 'rgba(255,255,255,0.04)',
-                                    border: permissions.includes(perm) ? '1px solid rgba(255,149,0,0.5)' : '1px solid rgba(255,255,255,0.08)',
-                                    color: permissions.includes(perm) ? '#ff9500' : 'rgba(203,213,225,0.6)',
-                                    boxShadow: permissions.includes(perm) ? '0 0 12px rgba(255,149,0,0.2)' : 'none',
+                                    background: permissions.includes(perm) ? 'rgba(255,179,71,0.2)' : 'rgba(255,255,255,0.04)',
+                                    border: permissions.includes(perm) ? '1px solid rgba(255,179,71,0.5)' : '1px solid rgba(255,255,255,0.08)',
+                                    color: permissions.includes(perm) ? '#ffb347' : 'rgba(203,213,225,0.6)',
+                                    boxShadow: permissions.includes(perm) ? '0 0 12px rgba(255,179,71,0.2)' : 'none',
                                 }}
                             >
                                 {perm}
@@ -267,9 +266,9 @@ export default function AppPermissionAnalyzer() {
                             style={{ 
                                 padding: '0.75rem 1.25rem', 
                                 borderRadius: '10px', 
-                                background: 'rgba(255,149,0,0.15)', 
-                                border: '1px solid rgba(255,149,0,0.3)', 
-                                color: '#ff9500', 
+                                background: 'rgba(255,179,71,0.15)', 
+                                border: '1px solid rgba(255,179,71,0.3)', 
+                                color: '#ffb347', 
                                 cursor: 'pointer',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -290,10 +289,10 @@ export default function AppPermissionAnalyzer() {
                                         gap: '0.375rem', 
                                         padding: '0.375rem 0.75rem', 
                                         borderRadius: '6px', 
-                                        background: 'rgba(255,149,0,0.12)', 
-                                        border: '1px solid rgba(255,149,0,0.3)', 
+                                        background: 'rgba(255,179,71,0.12)', 
+                                        border: '1px solid rgba(255,179,71,0.3)', 
                                         fontSize: '0.8rem', 
-                                        color: '#ff9500',
+                                        color: '#ffb347',
                                         fontFamily: 'Rajdhani, sans-serif',
                                         fontWeight: 600
                                     }}
@@ -305,7 +304,7 @@ export default function AppPermissionAnalyzer() {
                                             background: 'none', 
                                             border: 'none', 
                                             cursor: 'pointer', 
-                                            color: '#ff9500', 
+                                            color: '#ffb347', 
                                             padding: 0, 
                                             display: 'flex',
                                             opacity: 0.7
@@ -324,7 +323,7 @@ export default function AppPermissionAnalyzer() {
                     disabled={loading}
                     className="btn-cyber"
                     style={{ 
-                        background: 'linear-gradient(135deg, #ff9500, #ff2d55)',
+                        background: 'linear-gradient(135deg, #ffb347, #ff5c8e)',
                         padding: '1rem 2rem',
                         width: '100%'
                     }}
@@ -353,9 +352,8 @@ export default function AppPermissionAnalyzer() {
             {/* Results */}
             {loading ? (
                 <div style={{ 
-                    background: 'rgba(5,8,22,0.6)',
-                    borderRadius: '16px',
-                    border: '1px solid rgba(255,149,0,0.15)'
+                    background: 'rgba(30, 41, 59, 0.3)',
+                    borderRadius: '16px'
                 }}>
                     <AnalyzingAnimation />
                 </div>
@@ -418,8 +416,7 @@ export default function AppPermissionAnalyzer() {
                     <div style={{ 
                         padding: '1.25rem', 
                         borderRadius: '12px', 
-                        background: 'rgba(13,17,23,0.7)', 
-                        border: '1px solid rgba(0,212,255,0.1)', 
+                        background: 'rgba(30, 41, 59, 0.4)', 
                         marginBottom: '1.5rem' 
                     }}>
                         <div style={{ 
@@ -435,7 +432,7 @@ export default function AppPermissionAnalyzer() {
                                 height: '100%', 
                                 borderRadius: '5px', 
                                 width: `${result.privacy_risk_score}%`, 
-                                background: `linear-gradient(90deg, #00ff88, #ffd60a, #ff9500, #ff2d55)`, 
+                                background: `linear-gradient(90deg, #86efac, #fce38a, #ffb347, #ff5c8e)`, 
                                 transition: 'width 1.5s ease', 
                                 boxShadow: `0 0 15px ${RISK_COLORS[result.risk_level]}60` 
                             }} />
@@ -491,7 +488,7 @@ export default function AppPermissionAnalyzer() {
                                     </div>
                                     <div style={{ fontSize: '0.85rem', color: '#e2e8f0', lineHeight: 1.5 }}>{combo.description}</div>
                                     <div style={{ fontSize: '0.75rem', color: 'rgba(203,213,225,0.5)', marginTop: '0.5rem' }}>
-                                        <span style={{ color: '#ff9500' }}>▸</span> Combo: {combo.combination.join(' + ')}
+                                        <span style={{ color: '#ffb347' }}>▸</span> Combo: {combo.combination.join(' + ')}
                                     </div>
                                 </div>
                             ))}
@@ -502,8 +499,7 @@ export default function AppPermissionAnalyzer() {
                     <div style={{ 
                         padding: '1.25rem', 
                         borderRadius: '12px', 
-                        background: 'rgba(13,17,23,0.7)', 
-                        border: '1px solid rgba(0,212,255,0.1)', 
+                        background: 'rgba(30, 41, 59, 0.4)', 
                         marginBottom: '1.5rem' 
                     }}>
                         <div style={{ 
@@ -522,7 +518,7 @@ export default function AppPermissionAnalyzer() {
                         </div>
                         {result.individual_permission_risks?.map((item, i) => {
                             const riskPct = Math.min((item.risk / 40) * 100, 100);
-                            const riskColor = item.risk >= 30 ? '#ff2d55' : item.risk >= 20 ? '#ff9500' : item.risk >= 10 ? '#ffd60a' : '#00ff88';
+                            const riskColor = item.risk >= 30 ? '#ff5c8e' : item.risk >= 20 ? '#ffb347' : item.risk >= 10 ? '#fce38a' : '#86efac';
                             return (
                                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.75rem' }}>
                                     <div style={{ width: '120px', fontSize: '0.85rem', color: '#e2e8f0', flexShrink: 0, fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>{item.permission}</div>

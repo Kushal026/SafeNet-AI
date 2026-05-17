@@ -36,22 +36,22 @@ function MarkdownText({ text }) {
 }
 
 function TypingIndicator() {
-    return (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Bot size={16} style={{ color: '#a78bfa' }} />
-            </div>
-            <div style={{ padding: '0.875rem 1.25rem', borderRadius: '16px 16px 16px 4px', background: 'rgba(22,27,34,0.8)', border: '1px solid rgba(124,58,237,0.2)', display: 'flex', gap: '6px', alignItems: 'center' }}>
-                {[0,1,2].map(i => (
-                    <div key={i} style={{ 
-                        width: '8px', height: '8px', borderRadius: '50%', 
-                        background: '#a78bfa',
-                        animation: `pulse 1.2s ease-in-out ${i * 0.15}s infinite`
-                    }} />
-                ))}
-            </div>
-        </div>
-    );
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+      <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(100,181,246,0.15)', border: '1px solid rgba(100,181,246,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <Bot size={16} style={{ color: '#64b5f6' }} />
+      </div>
+      <div style={{ padding: '0.875rem 1.25rem', borderRadius: '16px 16px 16px 4px', background: 'rgba(22,27,34,0.8)', border: '1px solid rgba(100,181,246,0.2)', display: 'flex', gap: '6px', alignItems: 'center' }}>
+        {[0,1,2].map(i => (
+          <div key={i} style={{ 
+            width: '8px', height: '8px', borderRadius: '50%', 
+            background: '#64b5f6',
+            animation: `pulse 1.2s ease-in-out ${i * 0.15}s infinite`
+          }} />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default function ChatBot() {
@@ -100,15 +100,15 @@ export default function ChatBot() {
     return (
         <div style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', height: 'calc(100vh - 120px)' }}>
             {/* Header */}
-            <div style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'space-between', 
+            <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
                 marginBottom: '1.5rem',
                 padding: '1.25rem',
                 borderRadius: '16px',
-                background: 'rgba(124,58,237,0.08)',
-                border: '1px solid rgba(124,58,237,0.2)'
+                background: 'rgba(0,212,255,0.08)',
+                border: '1px solid rgba(0,212,255,0.2)'
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <div style={{ 
@@ -118,7 +118,7 @@ export default function ChatBot() {
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         boxShadow: '0 0 30px rgba(124,58,237,0.2)'
                     }}>
-                        <Bot size={28} style={{ color: '#a78bfa' }} />
+                        <Bot size={28} style={{ color: '#64b5f6' }} />
                     </div>
                     <div>
                         <h1 style={{ 
@@ -131,11 +131,11 @@ export default function ChatBot() {
                             SafeNet <span style={{ color: '#a78bfa' }}>Assistant</span>
                         </h1>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <div style={{ 
-                                width: '8px', height: '8px', borderRadius: '50%', 
-                                background: '#00ff88', 
-                                boxShadow: '0 0 10px rgba(0,255,136,0.5)',
-                                animation: 'pulse 2s infinite' 
+                            <div style={{
+                                width: '8px', height: '8px', borderRadius: '50%',
+                                background: '#64b5f6',
+                                boxShadow: '0 0 10px rgba(100,181,246,0.5)',
+                                animation: 'pulse 2s infinite'
                             }} />
                             <span style={{ fontSize: '0.8rem', color: '#00ff88', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}>
                                 Online • AI Cybersecurity Expert
@@ -143,18 +143,18 @@ export default function ChatBot() {
                         </div>
                     </div>
                 </div>
-                <button 
-                    onClick={clearChat} 
-                    style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: '0.5rem', 
-                        padding: '0.625rem 1rem', 
-                        borderRadius: '10px', 
-                        background: 'rgba(255,255,255,0.04)', 
-                        border: '1px solid rgba(255,255,255,0.08)', 
-                        color: '#64748b', 
-                        fontSize: '0.8rem', 
+                <button
+                    onClick={clearChat}
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        padding: '0.625rem 1rem',
+                        borderRadius: '10px',
+                        background: 'rgba(255,255,255,0.04)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        color: '#64b5f6',
+                        fontSize: '0.8rem',
                         cursor: 'pointer',
                         transition: 'all 0.2s ease'
                     }}
@@ -167,17 +167,17 @@ export default function ChatBot() {
             {/* Quick Prompts */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.25rem' }}>
                 {QUICK_PROMPTS.map((prompt, i) => (
-                    <button 
-                        key={i} 
-                        onClick={() => send(prompt.text)} 
+                    <button
+                        key={i}
+                        onClick={() => send(prompt.text)}
                         disabled={loading}
-                        style={{ 
-                            padding: '0.5rem 1rem', 
-                            borderRadius: '25px', 
-                            background: 'rgba(124,58,237,0.1)', 
-                            border: '1px solid rgba(124,58,237,0.25)', 
-                            color: '#a78bfa', 
-                            fontSize: '0.8rem', 
+                        style={{
+                            padding: '0.5rem 1rem',
+                            borderRadius: '25px',
+                            background: 'rgba(100,181,246,0.1)',
+                            border: '1px solid rgba(100,181,246,0.25)',
+                            color: '#64b5f6',
+                            fontSize: '0.8rem',
                             cursor: loading ? 'not-allowed' : 'pointer',
                             transition: 'all 0.2s ease',
                             display: 'flex',
@@ -193,56 +193,56 @@ export default function ChatBot() {
             </div>
 
             {/* Messages */}
-            <div style={{ 
-                flex: 1, 
-                overflowY: 'auto', 
-                padding: '1.25rem', 
-                borderRadius: '16px', 
-                background: 'rgba(13,17,23,0.7)', 
-                border: '1px solid rgba(124,58,237,0.12)', 
-                backdropFilter: 'blur(16px)', 
-                marginBottom: '1rem', 
-                display: 'flex', 
-                flexDirection: 'column', 
-                gap: '1rem' 
+            <div style={{
+                flex: 1,
+                overflowY: 'auto',
+                padding: '1.25rem',
+                borderRadius: '16px',
+                background: 'rgba(13,17,23,0.7)',
+                border: '1px solid rgba(100,181,246,0.12)',
+                backdropFilter: 'blur(16px)',
+                marginBottom: '1rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1rem'
             }}>
                 {messages.map((msg, i) => (
-                    <div 
-                        key={i} 
-                        style={{ 
-                            display: 'flex', 
-                            justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start', 
+                    <div
+                        key={i}
+                        style={{
+                            display: 'flex',
+                            justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start',
                             animation: 'fadeInUp 0.3s ease-out',
                             alignItems: 'flex-start'
                         }}
                     >
                         {msg.role === 'assistant' && (
-                            <div style={{ 
-                                width: '36px', height: '36px', borderRadius: '50%', 
-                                background: 'rgba(124,58,237,0.15)', 
-                                border: '1px solid rgba(124,58,237,0.3)', 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                justifyContent: 'center', 
-                                marginRight: '0.75rem', 
-                                flexShrink: 0, 
-                                marginTop: '0.25rem' 
+                            <div style={{
+                                width: '36px', height: '36px', borderRadius: '50%',
+                                background: 'rgba(100,181,246,0.15)',
+                                border: '1px solid rgba(100,181,246,0.3)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginRight: '0.75rem',
+                                flexShrink: 0,
+                                marginTop: '0.25rem'
                             }}>
-                                <Bot size={16} style={{ color: '#a78bfa' }} />
+                                <Bot size={16} style={{ color: '#64b5f6' }} />
                             </div>
                         )}
                         <div style={{
-                            maxWidth: '80%', 
-                            padding: '1rem 1.25rem', 
+                            maxWidth: '80%',
+                            padding: '1rem 1.25rem',
                             borderRadius: msg.role === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
-                            background: msg.role === 'user' 
-                                ? 'linear-gradient(135deg, rgba(124,58,237,0.25), rgba(0,212,255,0.15))' 
+                            background: msg.role === 'user'
+                                ? 'linear-gradient(135deg, rgba(100,181,246,0.25), rgba(0,212,255,0.15))'
                                 : 'rgba(22,27,34,0.8)',
-                            border: msg.role === 'user' 
-                                ? '1px solid rgba(124,58,237,0.3)' 
-                                : '1px solid rgba(124,58,237,0.15)',
-                            boxShadow: msg.role === 'user' 
-                                ? '0 4px 20px rgba(124,58,237,0.15)' 
+                border: msg.role === 'user'
+                    ? '1px solid rgba(0,212,255,0.3)'
+                    : '1px solid rgba(0,212,255,0.15)',
+                            boxShadow: msg.role === 'user'
+                                ? '0 4px 20px rgba(100,181,246,0.15)'
                                 : 'none'
                         }}>
                             {msg.role === 'assistant' ? <MarkdownText text={msg.content} /> : (
@@ -257,13 +257,13 @@ export default function ChatBot() {
             </div>
 
             {/* Input */}
-            <div style={{ 
-                display: 'flex', 
+            <div style={{
+                display: 'flex',
                 gap: '1rem',
                 padding: '1rem',
                 borderRadius: '16px',
                 background: 'rgba(13,17,23,0.7)',
-                border: '1px solid rgba(124,58,237,0.15)'
+                border: '1px solid rgba(100,181,246,0.15)'
             }}>
                 <input
                     value={input}
@@ -275,7 +275,7 @@ export default function ChatBot() {
                         padding: '0.875rem 1.25rem',
                         borderRadius: '12px',
                         background: 'rgba(2,4,8,0.6)',
-                        border: '1px solid rgba(124,58,237,0.3)',
+                        border: '1px solid rgba(100,181,246,0.3)',
                         color: '#e2e8f0',
                         fontSize: '0.95rem',
                         fontFamily: 'Rajdhani, sans-serif'
@@ -286,9 +286,9 @@ export default function ChatBot() {
                     onClick={() => send()}
                     disabled={loading || !input.trim()}
                     className="btn-cyber"
-                    style={{ 
+                    style={{
                         padding: '0.875rem 1.5rem',
-                        background: 'linear-gradient(135deg, #7c3aed, #a78bfa)'
+                        background: 'linear-gradient(135deg, #7c3aed, #64b5f6)'
                     }}
                 >
                     {loading ? <Loader size={18} className="animate-spin" /> : <Send size={18} />}

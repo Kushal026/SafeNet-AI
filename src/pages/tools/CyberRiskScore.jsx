@@ -18,59 +18,59 @@ const QUESTIONS = [
 ];
 
 const RISK_CONFIG = {
-    'HIGH RISK':     { color: '#ff2d55', bg: 'rgba(255,45,85,0.12)', min: 0, max: 100 },
-    'MEDIUM RISK':   { color: '#ff9500', bg: 'rgba(255,149,0,0.12)',  min: 0, max: 100 },
-    'LOW RISK':      { color: '#00d4ff', bg: 'rgba(0,212,255,0.12)',  min: 0, max: 100 },
-    'VERY LOW RISK': { color: '#00ff88', bg: 'rgba(0,255,136,0.12)',  min: 0, max: 100 },
+    'HIGH RISK':     { color: '#64b5f6', bg: 'rgba(100,181,246,0.12)', min: 0, max: 100 },
+    'MEDIUM RISK':   { color: '#64b5f6', bg: 'rgba(100,181,246,0.12)',  min: 0, max: 100 },
+    'LOW RISK':      { color: '#64b5f6', bg: 'rgba(100,181,246,0.12)',  min: 0, max: 100 },
+    'VERY LOW RISK': { color: '#64b5f6', bg: 'rgba(100,181,246,0.12)',  min: 0, max: 100 },
 };
 
 function ScanningAnimation() {
-    return (
-        <div style={{ textAlign: 'center', padding: '3rem' }}>
-            <div style={{ position: 'relative', width: '140px', height: '140px', margin: '0 auto 1.5rem' }}>
-                {/* Rotating target rings */}
-                {[0,1,2].map(i => (
-                    <div key={i} style={{
-                        position: 'absolute', inset: `${i * 20}px`,
-                        borderRadius: '50%',
-                        border: `2px solid rgba(255,214,10,${0.3 - i * 0.08})`,
-                        animation: `spin ${3 - i * 0.5}s linear infinite`,
-                    }} />
-                ))}
-                {/* Center target */}
-                <div style={{ 
-                    position: 'absolute', top: '50%', left: '50%', 
-                    transform: 'translate(-50%,-50%)',
-                    width: '50px', height: '50px', borderRadius: '50%',
-                    background: 'rgba(255,214,10,0.1)',
-                    border: '2px solid rgba(255,214,10,0.4)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center'
-                }}>
-                    <Target size={22} style={{ color: '#ffd60a', filter: 'drop-shadow(0 0 8px rgba(255,214,10,0.5))' }} />
-                </div>
-            </div>
-            <div style={{ 
-                color: '#ffd60a', 
-                fontFamily: 'Orbitron, sans-serif', 
-                fontSize: '1rem', 
-                marginBottom: '0.75rem',
-                letterSpacing: '0.1em',
-                textShadow: '0 0 10px rgba(255,214,10,0.5)'
-            }}>
-                CALCULATING RISK SCORE
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
-                {[0,1,2,3,4].map(i => (
-                    <div key={i} style={{ 
-                        width: '10px', height: '10px', borderRadius: '50%', 
-                        background: '#ffd60a',
-                        animation: `pulse 1s ease-in-out ${i * 0.15}s infinite`,
-                        boxShadow: '0 0 10px rgba(255,214,10,0.5)'
-                    }} />
-                ))}
-            </div>
+  return (
+    <div style={{ textAlign: 'center', padding: '3rem' }}>
+      <div style={{ position: 'relative', width: '140px', height: '140px', margin: '0 auto 1.5rem' }}>
+        {/* Rotating target rings */}
+        {[0,1,2].map(i => (
+          <div key={i} style={{
+            position: 'absolute', inset: `${i * 20}px`,
+            borderRadius: '50%',
+            border: `2px solid rgba(100,181,246,${0.3 - i * 0.08})`,
+            animation: `spin ${3 - i * 0.5}s linear infinite`,
+          }} />
+        ))}
+        {/* Center target */}
+        <div style={{
+          position: 'absolute', top: '50%', left: '50%',
+          transform: 'translate(-50%,-50%)',
+          width: '50px', height: '50px', borderRadius: '50%',
+          background: 'rgba(100,181,246,0.1)',
+          border: '2px solid rgba(100,181,246,0.4)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center'
+        }}>
+          <Target size={22} style={{ color: '#64b5f6', filter: 'drop-shadow(0 0 8px rgba(100,181,246,0.5))' }} />
         </div>
-    );
+      </div>
+      <div style={{
+        color: '#64b5f6',
+        fontFamily: 'Orbitron, sans-serif',
+        fontSize: '1rem',
+        marginBottom: '0.75rem',
+        letterSpacing: '0.1em',
+        textShadow: '0 0 10px rgba(100,181,246,0.5)'
+      }}>
+        CALCULATING RISK SCORE
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
+        {[0,1,2,3,4].map(i => (
+          <div key={i} style={{
+            width: '10px', height: '10px', borderRadius: '50%',
+            background: '#64b5f6',
+            animation: `pulse 1s ease-in-out ${i * 0.15}s infinite`,
+            boxShadow: '0 0 10px rgba(100,181,246,0.5)'
+          }} />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default function CyberRiskScore() {
@@ -117,25 +117,25 @@ export default function CyberRiskScore() {
         <div style={{ maxWidth: '750px', margin: '0 auto', padding: '2rem 1.5rem' }}>
             {/* Header */}
             <div style={{ marginBottom: '2.5rem', textAlign: 'center' }}>
-                <div style={{ 
-                    display: 'inline-flex', alignItems: 'center', gap: '0.5rem', 
-                    padding: '0.5rem 1rem', borderRadius: '100px', 
-                    background: 'rgba(255,214,10,0.08)', 
-                    border: '1px solid rgba(255,214,10,0.2)', 
-                    marginBottom: '1rem' 
+                <div style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+                    padding: '0.5rem 1rem', borderRadius: '100px',
+                    background: 'rgba(100,181,246,0.08)',
+                    border: '1px solid rgba(100,181,246,0.2)',
+                    marginBottom: '1rem'
                 }}>
-                    <Shield size={14} style={{ color: '#ffd60a' }} />
-                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#ffd60a', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif', textTransform: 'uppercase' }}>
+                    <Shield size={14} style={{ color: '#64b5f6' }} />
+                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#64b5f6', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif', textTransform: 'uppercase' }}>
                         Self Assessment
                     </span>
                 </div>
                 
-                <h1 style={{ 
-                    fontSize: '2.5rem', fontWeight: 900, color: '#f8fafc', 
+                <h1 style={{
+                    fontSize: '2.5rem', fontWeight: 900, color: '#f8fafc',
                     marginBottom: '0.75rem', fontFamily: 'Orbitron, sans-serif',
                     letterSpacing: '0.02em'
                 }}>
-                    <span style={{ color: '#ffd60a' }}>Cyber Risk</span> Score
+                    <span style={{ color: '#64b5f6' }}>Cyber Risk</span> Score
                 </h1>
                 <p style={{ 
                     color: 'rgba(203,213,225,0.6)', 
@@ -183,12 +183,12 @@ export default function CyberRiskScore() {
                         Answer 10 quick questions about your security habits. We'll calculate your personal Cyber Risk Score (0–100) and give you personalized recommendations.
                     </p>
                     <button
-                        onClick={() => setStep(1)}
-                        className="btn-cyber"
-                        style={{ 
-                            background: 'linear-gradient(135deg, #ffd60a, #ff9500)',
-                            padding: '1rem 2.5rem'
-                        }}
+                    onClick={() => setStep(1)}
+                    className="btn-cyber"
+                    style={{
+                        background: 'linear-gradient(135deg, #64b5f6, #64b5f6)',
+                        padding: '1rem 2.5rem'
+                    }}
                     >
                         Start Assessment →
                     </button>
@@ -296,12 +296,12 @@ export default function CyberRiskScore() {
             )}
 
             {/* Loading */}
-            {step === 11 && (
-                <div style={{ 
+            {loading && (
+                <div style={{
                     padding: '3rem',
                     background: 'rgba(5,8,22,0.6)',
                     borderRadius: '16px',
-                    border: '1px solid rgba(255,214,10,0.15)'
+                    border: '1px solid rgba(100,181,246,0.15)'
                 }}>
                     <ScanningAnimation />
                 </div>
@@ -408,11 +408,11 @@ export default function CyberRiskScore() {
                         </div>
                     )}
 
-                    <button 
-                        onClick={restart} 
+                    <button
+                        onClick={restart}
                         className="btn-cyber"
-                        style={{ 
-                            background: 'linear-gradient(135deg, #ffd60a, #ff9500)',
+                        style={{
+                            background: 'linear-gradient(135deg, #64b5f6, #64b5f6)',
                             padding: '1rem 2rem',
                             width: '100%'
                         }}

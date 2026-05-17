@@ -1,0 +1,4 @@
+url,scan_date,malicious,malware_family,source
+http://malicious.example/login,2025-05-01,True,Emotet,virustotal
+http://suspicious.example/reset,2025-04-28,True,,internal_scan
+http://benign.example/home,2025-05-10,False,,internal_scan

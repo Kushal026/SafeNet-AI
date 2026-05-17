@@ -4,11 +4,11 @@ import { Eye, AlertTriangle, CheckCircle, Loader, Shield, Activity, Zap, Chevron
 const API_BASE = '/api';
 
 const THREAT_COLORS = {
-    CRITICAL: { bg: 'rgba(255,45,85,0.15)', border: 'rgba(255,45,85,0.5)', text: '#ff2d55', glow: 'rgba(255,45,85,0.3)', label: 'CRITICAL' },
-    HIGH:     { bg: 'rgba(255,149,0,0.15)',  border: 'rgba(255,149,0,0.5)',  text: '#ff9500', glow: 'rgba(255,149,0,0.3)', label: 'HIGH' },
-    MEDIUM:   { bg: 'rgba(255,214,10,0.15)', border: 'rgba(255,214,10,0.5)', text: '#ffd60a', glow: 'rgba(255,214,10,0.3)', label: 'MEDIUM' },
-    LOW:      { bg: 'rgba(0,212,255,0.15)',  border: 'rgba(0,212,255,0.5)',  text: '#00d4ff', glow: 'rgba(0,212,255,0.3)', label: 'LOW' },
-    SAFE:     { bg: 'rgba(0,255,136,0.15)', border: 'rgba(0,255,136,0.5)',  text: '#00ff88', glow: 'rgba(0,255,136,0.3)', label: 'SAFE' },
+    CRITICAL: { bg: 'rgba(100,181,246,0.15)', border: 'rgba(100,181,246,0.5)', text: '#64b5f6', glow: 'rgba(100,181,246,0.3)', label: 'CRITICAL' },
+    HIGH:     { bg: 'rgba(100,181,246,0.15)',  border: 'rgba(100,181,246,0.5)',  text: '#64b5f6', glow: 'rgba(100,181,246,0.3)', label: 'HIGH' },
+    MEDIUM:   { bg: 'rgba(100,181,246,0.15)', border: 'rgba(100,181,246,0.5)', text: '#64b5f6', glow: 'rgba(100,181,246,0.3)', label: 'MEDIUM' },
+    LOW:      { bg: 'rgba(100,181,246,0.15)',  border: 'rgba(100,181,246,0.5)',  text: '#64b5f6', glow: 'rgba(100,181,246,0.3)', label: 'LOW' },
+    SAFE:     { bg: 'rgba(100,181,246,0.15)', border: 'rgba(100,181,246,0.5)',  text: '#64b5f6', glow: 'rgba(100,181,246,0.3)', label: 'SAFE' },
 };
 
 function ScanningAnimation() {
@@ -16,72 +16,72 @@ function ScanningAnimation() {
         <div style={{ textAlign: 'center', padding: '3rem' }}>
             <div style={{ position: 'relative', width: '140px', height: '140px', margin: '0 auto 1.5rem' }}>
                 {/* Outer ring */}
-                <div style={{ 
-                    position: 'absolute', inset: 0, 
-                    borderRadius: '50%', 
-                    border: '3px solid rgba(0,212,255,0.15)',
-                    boxShadow: '0 0 20px rgba(0,212,255,0.2)'
+                <div style={{
+                    position: 'absolute', inset: 0,
+                    borderRadius: '50%',
+                    border: '3px solid rgba(100,181,246,0.15)',
+                    boxShadow: '0 0 20px rgba(100,181,246,0.2)'
                 }} />
                 {/* Rotating ring 1 */}
-                <div style={{ 
-                    position: 'absolute', inset: 0, 
-                    borderRadius: '50%', 
+                <div style={{
+                    position: 'absolute', inset: 0,
+                    borderRadius: '50%',
                     border: '3px solid transparent',
-                    borderTopColor: '#00d4ff',
-                    borderRightColor: '#00d4ff',
+                    borderTopColor: '#64b5f6',
+                    borderRightColor: '#64b5f6',
                     animation: 'spin 1s linear infinite',
-                    boxShadow: '0 0 15px rgba(0,212,255,0.5)'
+                    boxShadow: '0 0 15px rgba(100,181,246,0.5)'
                 }} />
                 {/* Rotating ring 2 */}
-                <div style={{ 
-                    position: 'absolute', inset: '12px', 
-                    borderRadius: '50%', 
+                <div style={{
+                    position: 'absolute', inset: '12px',
+                    borderRadius: '50%',
                     border: '3px solid transparent',
-                    borderTopColor: '#a78bfa',
-                    borderBottomColor: '#a78bfa',
+                    borderTopColor: '#64b5f6',
+                    borderBottomColor: '#64b5f6',
                     animation: 'spin 1.5s linear infinite reverse',
-                    boxShadow: '0 0 15px rgba(167,139,250,0.5)'
+                    boxShadow: '0 0 15px rgba(100,181,246,0.5)'
                 }} />
                 {/* Inner ring */}
-                <div style={{ 
-                    position: 'absolute', inset: '25px', 
-                    borderRadius: '50%', 
-                    border: '2px solid rgba(0,255,136,0.3)',
+                <div style={{
+                    position: 'absolute', inset: '25px',
+                    borderRadius: '50%',
+                    border: '2px solid rgba(100,181,246,0.3)',
                     animation: 'pulse 2s ease-in-out infinite'
                 }} />
-                <Eye size={32} style={{ 
-                    position: 'absolute', inset: 0, margin: 'auto', 
-                    color: '#00d4ff', top: '50%', left: '50%', 
+                <Eye size={32} style={{
+                    position: 'absolute', inset: 0, margin: 'auto',
+                    color: '#64b5f6', top: '50%', left: '50%',
                     transform: 'translate(-50%,-50%)',
-                    filter: 'drop-shadow(0 0 8px rgba(0,212,255,0.8))'
+                    filter: 'drop-shadow(0 0 8px rgba(100,181,246,0.8))'
                 }} />
             </div>
-            <div style={{ 
-                color: '#00d4ff', 
-                fontFamily: 'Orbitron, sans-serif', 
-                fontSize: '1rem', 
+            <div style={{
+                color: '#64b5f6',
+                fontFamily: 'Orbitron, sans-serif',
+                fontSize: '1rem',
                 marginBottom: '0.75rem',
                 letterSpacing: '0.1em',
-                textShadow: '0 0 10px rgba(0,212,255,0.5)'
+                textShadow: '0 0 10px rgba(100,181,246,0.5)'
             }}>
                 AI ANALYSIS IN PROGRESS
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
                 {[0,1,2,3,4].map(i => (
-                    <div key={i} style={{ 
-                        width: '10px', height: '10px', borderRadius: '50%', 
-                        background: '#00d4ff',
+                    <div key={i} style={{
+                        width: '10px', height: '10px', borderRadius: '50%',
+                        background: '#64b5f6',
                         animation: `pulse 1s ease-in-out ${i * 0.15}s infinite`,
-                        boxShadow: '0 0 10px rgba(0,212,255,0.5)'
+                        boxShadow: '0 0 10px rgba(100,181,246,0.5)'
                     }} />
                 ))}
             </div>
-            <div style={{ 
+            <div style={{
                 marginTop: '1.5rem',
                 padding: '0.75rem 1.5rem',
-                background: 'rgba(0,212,255,0.08)',
+                background: 'rgba(100,181,246,0.08)',
                 borderRadius: '8px',
-                border: '1px solid rgba(0,212,255,0.2)',
+                border: '1px solid rgba(100,181,246,0.2)',
                 display: 'inline-block'
             }}>
                 <div style={{ 
@@ -98,7 +98,6 @@ function ScanningAnimation() {
 
 function ResultCard({ result }) {
     const threat = THREAT_COLORS[result.threat_level] || THREAT_COLORS.SAFE;
-    const [expanded, setExpanded] = useState(false);
 
     return (
         <div style={{ 
@@ -169,10 +168,10 @@ function ResultCard({ result }) {
                 {/* AI Explanation */}
                 {result.ai_explanation && (
                     <div style={{ marginBottom: '1.5rem' }}>
-                        <div style={{ 
+                        <div style={{
                             display: 'flex', alignItems: 'center', gap: '0.5rem',
                             marginBottom: '0.75rem',
-                            color: '#00d4ff',
+                            color: '#64b5f6',
                             fontFamily: 'Rajdhani, sans-serif',
                             fontWeight: 600,
                             fontSize: '0.9rem',
@@ -182,11 +181,11 @@ function ResultCard({ result }) {
                             <Zap size={16} />
                             AI Analysis
                         </div>
-                        <div style={{ 
+                        <div style={{
                             padding: '1rem 1.25rem',
-                            background: 'rgba(0,212,255,0.05)',
+                            background: 'rgba(100,181,246,0.05)',
                             borderRadius: '10px',
-                            border: '1px solid rgba(0,212,255,0.15)',
+                            border: '1px solid rgba(100,181,246,0.15)',
                             color: 'rgba(203,213,225,0.9)',
                             fontSize: '0.95rem',
                             lineHeight: 1.7
@@ -199,10 +198,10 @@ function ResultCard({ result }) {
                 {/* Suspicious Elements */}
                 {result.suspicious_elements && result.suspicious_elements.length > 0 && (
                     <div style={{ marginBottom: '1.5rem' }}>
-                        <div style={{ 
+                        <div style={{
                             display: 'flex', alignItems: 'center', gap: '0.5rem',
                             marginBottom: '0.75rem',
-                            color: '#ff9500',
+                            color: '#64b5f6',
                             fontFamily: 'Rajdhani, sans-serif',
                             fontWeight: 600,
                             fontSize: '0.9rem',
@@ -216,10 +215,10 @@ function ResultCard({ result }) {
                             {result.suspicious_elements.map((elem, i) => (
                                 <div key={i} style={{
                                     padding: '0.5rem 1rem',
-                                    background: 'rgba(255,149,0,0.1)',
-                                    border: '1px solid rgba(255,149,0,0.3)',
+                                    background: 'rgba(100,181,246,0.1)',
+                                    border: '1px solid rgba(100,181,246,0.3)',
                                     borderRadius: '6px',
-                                    color: '#ff9500',
+                                    color: '#64b5f6',
                                     fontSize: '0.85rem',
                                     fontFamily: 'JetBrains Mono, monospace'
                                 }}>
@@ -233,10 +232,10 @@ function ResultCard({ result }) {
                 {/* Security Advice */}
                 {result.security_advice && result.security_advice.length > 0 && (
                     <div>
-                        <div style={{ 
+                        <div style={{
                             display: 'flex', alignItems: 'center', gap: '0.5rem',
                             marginBottom: '0.75rem',
-                            color: '#00ff88',
+                            color: '#64b5f6',
                             fontFamily: 'Rajdhani, sans-serif',
                             fontWeight: 600,
                             fontSize: '0.9rem',
@@ -250,14 +249,14 @@ function ResultCard({ result }) {
                             {result.security_advice.map((advice, i) => (
                                 <div key={i} style={{
                                     padding: '0.75rem 1rem',
-                                    background: 'rgba(0,255,136,0.05)',
-                                    border: '1px solid rgba(0,255,136,0.15)',
+                                    background: 'rgba(100,181,246,0.05)',
+                                    border: '1px solid rgba(100,181,246,0.15)',
                                     borderRadius: '8px',
                                     color: 'rgba(203,213,225,0.85)',
                                     fontSize: '0.9rem',
                                     display: 'flex', alignItems: 'flex-start', gap: '0.75rem'
                                 }}>
-                                    <CheckCircle size={16} style={{ color: '#00ff88', flexShrink: 0, marginTop: '2px' }} />
+                                    <CheckCircle size={16} style={{ color: '#64b5f6', flexShrink: 0, marginTop: '2px' }} />
                                     {advice}
                                 </div>
                             ))}
@@ -292,7 +291,7 @@ export default function PhishingDetector() {
             });
             const data = await res.json();
             setResult(data);
-        } catch (e) {
+        } catch {
             setError('Failed to analyze email. Please check if the backend is running.');
         }
         setLoading(false);
@@ -302,25 +301,25 @@ export default function PhishingDetector() {
         <div style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 1.5rem' }}>
             {/* Header */}
             <div style={{ marginBottom: '2.5rem', textAlign: 'center' }}>
-                <div style={{ 
-                    display: 'inline-flex', alignItems: 'center', gap: '0.5rem', 
-                    padding: '0.5rem 1rem', borderRadius: '100px', 
-                    background: 'rgba(0,212,255,0.08)', 
-                    border: '1px solid rgba(0,212,255,0.2)', 
-                    marginBottom: '1rem' 
+                <div style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+                    padding: '0.5rem 1rem', borderRadius: '100px',
+                    background: 'rgba(100,181,246,0.08)',
+                    border: '1px solid rgba(100,181,246,0.2)',
+                    marginBottom: '1rem'
                 }}>
-                    <Activity size={14} style={{ color: '#00d4ff' }} />
-                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#00d4ff', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif', textTransform: 'uppercase' }}>
+                    <Activity size={14} style={{ color: '#64b5f6' }} />
+                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#64b5f6', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif', textTransform: 'uppercase' }}>
                         AI-Powered Detection
                     </span>
                 </div>
                 
-                <h1 style={{ 
-                    fontSize: '2.5rem', fontWeight: 900, color: '#f8fafc', 
+                <h1 style={{
+                    fontSize: '2.5rem', fontWeight: 900, color: '#f8fafc',
                     marginBottom: '0.75rem', fontFamily: 'Orbitron, sans-serif',
                     letterSpacing: '0.02em'
                 }}>
-                    <span style={{ color: '#00d4ff' }}>Phishing</span> Detector
+                    <span style={{ color: '#64b5f6' }}>Phishing</span> Detector
                 </h1>
                 <p style={{ 
                     color: 'rgba(203,213,225,0.6)', 
@@ -331,10 +330,10 @@ export default function PhishingDetector() {
             </div>
 
             {/* Input Area */}
-            <div className="glass-panel" style={{ 
-                padding: '1.5rem', 
+            <div className="glass-panel" style={{
+                padding: '1.5rem',
                 marginBottom: '1.5rem',
-                border: '1px solid rgba(0,212,255,0.15)'
+                border: '1px solid rgba(100,181,246,0.15)'
             }}>
                 <textarea
                     value={emailText}
@@ -355,12 +354,12 @@ export default function PhishingDetector() {
                 />
                 
                 {error && (
-                    <div style={{ 
-                        padding: '0.75rem 1rem', 
-                        background: 'rgba(255,45,85,0.1)', 
-                        border: '1px solid rgba(255,45,85,0.3)',
+                    <div style={{
+                        padding: '0.75rem 1rem',
+                        background: 'rgba(100,181,246,0.1)',
+                        border: '1px solid rgba(100,181,246,0.3)',
                         borderRadius: '8px',
-                        color: '#ff2d55',
+                        color: '#64b5f6',
                         marginTop: '1rem',
                         fontSize: '0.9rem'
                     }}>

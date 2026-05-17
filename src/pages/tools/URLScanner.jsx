@@ -4,10 +4,10 @@ import { Globe, AlertTriangle, CheckCircle, Loader, Shield, Activity, Zap, Exter
 const API_BASE = '/api';
 
 const STATUS_COLORS = {
-    SAFE:       { bg: 'rgba(0,255,136,0.15)',  border: 'rgba(0,255,136,0.5)',  text: '#00ff88', glow: 'rgba(0,255,136,0.3)', label: 'SAFE' },
-    SUSPICIOUS: { bg: 'rgba(255,214,10,0.15)', border: 'rgba(255,214,10,0.5)', text: '#ffd60a', glow: 'rgba(255,214,10,0.3)', label: 'SUSPICIOUS' },
-    DANGEROUS:  { bg: 'rgba(255,149,0,0.15)',  border: 'rgba(255,149,0,0.5)',  text: '#ff9500', glow: 'rgba(255,149,0,0.3)', label: 'DANGEROUS' },
-    MALICIOUS:  { bg: 'rgba(255,45,85,0.15)',  border: 'rgba(255,45,85,0.5)',  text: '#ff2d55', glow: 'rgba(255,45,85,0.3)', label: 'MALICIOUS' },
+    SAFE:       { bg: 'rgba(100,181,246,0.15)', border: 'rgba(100,181,246,0.5)', text: '#64b5f6', glow: 'rgba(100,181,246,0.3)', label: 'SAFE' },
+    SUSPICIOUS: { bg: 'rgba(100,181,246,0.15)', border: 'rgba(100,181,246,0.5)', text: '#64b5f6', glow: 'rgba(100,181,246,0.3)', label: 'SUSPICIOUS' },
+    DANGEROUS:  { bg: 'rgba(100,181,246,0.15)', border: 'rgba(100,181,246,0.5)', text: '#64b5f6', glow: 'rgba(100,181,246,0.3)', label: 'DANGEROUS' },
+    MALICIOUS:  { bg: 'rgba(100,181,246,0.15)', border: 'rgba(100,181,246,0.5)', text: '#64b5f6', glow: 'rgba(100,181,246,0.3)', label: 'MALICIOUS' },
 };
 
 function RadarScan() {
@@ -19,59 +19,59 @@ function RadarScan() {
                     <div key={i} style={{
                         position: 'absolute', borderRadius: '50%',
                         inset: `${i * 20}px`,
-                        border: `1px solid rgba(0,212,255,${0.2 - i * 0.04})`,
+                        border: `1px solid rgba(100,181,246,${0.2 - i * 0.04})`,
                     }} />
                 ))}
                 {/* Sweeping arm */}
                 <div style={{
                     position: 'absolute', inset: 0, borderRadius: '50%',
-                    background: 'conic-gradient(from 0deg, transparent 70%, rgba(0,212,255,0.5) 100%)',
+                    background: 'conic-gradient(from 0deg, transparent 70%, rgba(100,181,246,0.5) 100%)',
                     animation: 'spin 2s linear infinite',
-                    boxShadow: '0 0 40px rgba(0,212,255,0.3)'
+                    boxShadow: '0 0 40px rgba(100,181,246,0.3)'
                 }} />
                 {/* Second arm */}
                 <div style={{
                     position: 'absolute', inset: 0, borderRadius: '50%',
-                    background: 'conic-gradient(from 180deg, transparent 70%, rgba(167,139,250,0.4) 100%)',
+                    background: 'conic-gradient(from 180deg, transparent 70%, rgba(100,181,246,0.4) 100%)',
                     animation: 'spin 3s linear infinite reverse',
                 }} />
-                <Globe size={36} style={{ 
-                    position: 'absolute', top: '50%', left: '50%', 
-                    transform: 'translate(-50%,-50%)', 
-                    color: '#00d4ff',
-                    filter: 'drop-shadow(0 0 10px rgba(0,212,255,0.8))'
+                <Globe size={36} style={{
+                    position: 'absolute', top: '50%', left: '50%',
+                    transform: 'translate(-50%,-50%)',
+                    color: '#64b5f6',
+                    filter: 'drop-shadow(0 0 10px rgba(100,181,246,0.8))'
                 }} />
             </div>
-            <div style={{ 
-                color: '#00d4ff', 
-                fontFamily: 'Orbitron, sans-serif', 
-                fontSize: '1rem', 
+            <div style={{
+                color: '#64b5f6',
+                fontFamily: 'Orbitron, sans-serif',
+                fontSize: '1rem',
                 marginBottom: '0.75rem',
                 letterSpacing: '0.1em',
-                textShadow: '0 0 10px rgba(0,212,255,0.5)'
+                textShadow: '0 0 10px rgba(100,181,246,0.5)'
             }}>
                 SCANNING URL
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
                 {[0,1,2,3,4].map(i => (
-                    <div key={i} style={{ 
-                        width: '10px', height: '10px', borderRadius: '50%', 
-                        background: '#00d4ff',
+                    <div key={i} style={{
+                        width: '10px', height: '10px', borderRadius: '50%',
+                        background: '#64b5f6',
                         animation: `pulse 1s ease-in-out ${i * 0.15}s infinite`,
-                        boxShadow: '0 0 10px rgba(0,212,255,0.5)'
+                        boxShadow: '0 0 10px rgba(100,181,246,0.5)'
                     }} />
                 ))}
             </div>
-            <div style={{ 
+            <div style={{
                 marginTop: '1.5rem',
                 padding: '0.75rem 1.5rem',
-                background: 'rgba(0,212,255,0.08)',
+                background: 'rgba(100,181,246,0.08)',
                 borderRadius: '8px',
-                border: '1px solid rgba(0,212,255,0.2)',
+                border: '1px solid rgba(100,181,246,0.2)',
                 display: 'inline-block'
             }}>
-                <div style={{ 
-                    fontSize: '0.75rem', 
+                <div style={{
+                    fontSize: '0.75rem',
                     color: 'rgba(203,213,225,0.6)',
                     fontFamily: 'JetBrains Mono, monospace'
                 }}>
@@ -83,7 +83,7 @@ function RadarScan() {
 }
 
 function TrustGauge({ score }) {
-    const color = score >= 80 ? '#00ff88' : score >= 60 ? '#ffd60a' : score >= 40 ? '#ff9500' : '#ff2d55';
+    const color = '#64b5f6';
     const circumference = 2 * Math.PI * 45;
     const offset = circumference - (score / 100) * circumference;
 
@@ -95,23 +95,23 @@ function TrustGauge({ score }) {
                     <circle cx="70" cy="70" r="55" fill="none" stroke={color} strokeWidth="12"
                         strokeDasharray={circumference} strokeDashoffset={offset}
                         strokeLinecap="round" transform="rotate(-90 70 70)"
-                        style={{ 
+                        style={{
                             transition: 'stroke-dashoffset 1.5s ease',
                             filter: `drop-shadow(0 0 12px ${color})`
                         }}
                     />
                 </svg>
                 <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                    <div style={{ 
-                        fontSize: '2.5rem', 
-                        fontWeight: 900, 
-                        color, 
+                    <div style={{
+                        fontSize: '2.5rem',
+                        fontWeight: 900,
+                        color,
                         fontFamily: 'Orbitron, sans-serif',
                         textShadow: `0 0 20px ${color}`
                     }}>{score}</div>
-                    <div style={{ 
-                        fontSize: '0.7rem', 
-                        color: 'rgba(203,213,225,0.5)', 
+                    <div style={{
+                        fontSize: '0.7rem',
+                        color: 'rgba(203,213,225,0.5)',
                         textTransform: 'uppercase',
                         fontFamily: 'Rajdhani, sans-serif',
                         letterSpacing: '0.1em'
@@ -180,10 +180,10 @@ function ResultCard({ result }) {
             <div style={{ padding: '2rem' }}>
                 {/* URL Display */}
                 <div style={{ marginBottom: '1.5rem' }}>
-                    <div style={{ 
+                    <div style={{
                         display: 'flex', alignItems: 'center', gap: '0.5rem',
                         marginBottom: '0.5rem',
-                        color: '#00d4ff',
+                        color: '#64b5f6',
                         fontFamily: 'Rajdhani, sans-serif',
                         fontWeight: 600,
                         fontSize: '0.9rem',
@@ -195,9 +195,9 @@ function ResultCard({ result }) {
                     </div>
                     <div style={{
                         padding: '1rem 1.25rem',
-                        background: 'rgba(0,212,255,0.05)',
+                        background: 'rgba(100,181,246,0.05)',
                         borderRadius: '10px',
-                        border: '1px solid rgba(0,212,255,0.15)',
+                        border: '1px solid rgba(100,181,246,0.15)',
                         fontFamily: 'JetBrains Mono, monospace',
                         fontSize: '0.9rem',
                         color: 'rgba(203,213,225,0.9)',
@@ -210,10 +210,10 @@ function ResultCard({ result }) {
                 {/* AI Analysis */}
                 {result.ai_explanation && (
                     <div style={{ marginBottom: '1.5rem' }}>
-                        <div style={{ 
+                        <div style={{
                             display: 'flex', alignItems: 'center', gap: '0.5rem',
                             marginBottom: '0.75rem',
-                            color: '#00d4ff',
+                            color: '#64b5f6',
                             fontFamily: 'Rajdhani, sans-serif',
                             fontWeight: 600,
                             fontSize: '0.9rem',
@@ -223,11 +223,11 @@ function ResultCard({ result }) {
                             <Zap size={16} />
                             AI Analysis
                         </div>
-                        <div style={{ 
+                        <div style={{
                             padding: '1rem 1.25rem',
-                            background: 'rgba(0,212,255,0.05)',
+                            background: 'rgba(100,181,246,0.05)',
                             borderRadius: '10px',
-                            border: '1px solid rgba(0,212,255,0.15)',
+                            border: '1px solid rgba(100,181,246,0.15)',
                             color: 'rgba(203,213,225,0.9)',
                             fontSize: '0.95rem',
                             lineHeight: 1.7
@@ -240,10 +240,10 @@ function ResultCard({ result }) {
                 {/* Risk Indicators */}
                 {result.risk_indicators && result.risk_indicators.length > 0 && (
                     <div style={{ marginBottom: '1.5rem' }}>
-                        <div style={{ 
+                        <div style={{
                             display: 'flex', alignItems: 'center', gap: '0.5rem',
                             marginBottom: '0.75rem',
-                            color: '#ff9500',
+                            color: '#64b5f6',
                             fontFamily: 'Rajdhani, sans-serif',
                             fontWeight: 600,
                             fontSize: '0.9rem',
@@ -257,10 +257,10 @@ function ResultCard({ result }) {
                             {result.risk_indicators.map((indicator, i) => (
                                 <div key={i} style={{
                                     padding: '0.5rem 1rem',
-                                    background: 'rgba(255,149,0,0.1)',
-                                    border: '1px solid rgba(255,149,0,0.3)',
+                                    background: 'rgba(100,181,246,0.1)',
+                                    border: '1px solid rgba(100,181,246,0.3)',
                                     borderRadius: '6px',
-                                    color: '#ff9500',
+                                    color: '#64b5f6',
                                     fontSize: '0.85rem',
                                     fontFamily: 'JetBrains Mono, monospace'
                                 }}>
@@ -274,10 +274,10 @@ function ResultCard({ result }) {
                 {/* Security Advice */}
                 {result.security_advice && result.security_advice.length > 0 && (
                     <div>
-                        <div style={{ 
+                        <div style={{
                             display: 'flex', alignItems: 'center', gap: '0.5rem',
                             marginBottom: '0.75rem',
-                            color: '#00ff88',
+                            color: '#64b5f6',
                             fontFamily: 'Rajdhani, sans-serif',
                             fontWeight: 600,
                             fontSize: '0.9rem',
@@ -291,14 +291,14 @@ function ResultCard({ result }) {
                             {result.security_advice.map((advice, i) => (
                                 <div key={i} style={{
                                     padding: '0.75rem 1rem',
-                                    background: 'rgba(0,255,136,0.05)',
-                                    border: '1px solid rgba(0,255,136,0.15)',
+                                    background: 'rgba(100,181,246,0.05)',
+                                    border: '1px solid rgba(100,181,246,0.15)',
                                     borderRadius: '8px',
                                     color: 'rgba(203,213,225,0.85)',
                                     fontSize: '0.9rem',
                                     display: 'flex', alignItems: 'flex-start', gap: '0.75rem'
                                 }}>
-                                    <CheckCircle size={16} style={{ color: '#00ff88', flexShrink: 0, marginTop: '2px' }} />
+                                    <CheckCircle size={16} style={{ color: '#64b5f6', flexShrink: 0, marginTop: '2px' }} />
                                     {advice}
                                 </div>
                             ))}
@@ -333,7 +333,7 @@ export default function URLScanner() {
             });
             const data = await res.json();
             setResult(data);
-        } catch (e) {
+        } catch {
             setError('Failed to scan URL. Please check if the backend is running.');
         }
         setLoading(false);
@@ -343,28 +343,28 @@ export default function URLScanner() {
         <div style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 1.5rem' }}>
             {/* Header */}
             <div style={{ marginBottom: '2.5rem', textAlign: 'center' }}>
-                <div style={{ 
-                    display: 'inline-flex', alignItems: 'center', gap: '0.5rem', 
-                    padding: '0.5rem 1rem', borderRadius: '100px', 
-                    background: 'rgba(167,139,250,0.08)', 
-                    border: '1px solid rgba(167,139,250,0.2)', 
-                    marginBottom: '1rem' 
+                <div style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+                    padding: '0.5rem 1rem', borderRadius: '100px',
+                    background: 'rgba(100,181,246,0.08)',
+                    border: '1px solid rgba(100,181,246,0.2)',
+                    marginBottom: '1rem'
                 }}>
-                    <Activity size={14} style={{ color: '#a78bfa' }} />
-                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#a78bfa', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif', textTransform: 'uppercase' }}>
+                    <Activity size={14} style={{ color: '#64b5f6' }} />
+                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#64b5f6', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif', textTransform: 'uppercase' }}>
                         Real-time Scanning
                     </span>
                 </div>
                 
-                <h1 style={{ 
-                    fontSize: '2.5rem', fontWeight: 900, color: '#f8fafc', 
+                <h1 style={{
+                    fontSize: '2.5rem', fontWeight: 900, color: '#f8fafc',
                     marginBottom: '0.75rem', fontFamily: 'Orbitron, sans-serif',
                     letterSpacing: '0.02em'
                 }}>
-                    <span style={{ color: '#a78bfa' }}>URL</span> Scanner
+                    <span style={{ color: '#64b5f6' }}>URL</span> Scanner
                 </h1>
-                <p style={{ 
-                    color: 'rgba(203,213,225,0.6)', 
+                <p style={{
+                    color: 'rgba(203,213,225,0.6)',
                     fontSize: '1.1rem', fontFamily: 'Rajdhani, sans-serif', fontWeight: 500
                 }}>
                     Enter a URL to check for malware, phishing, and reputation issues
@@ -372,10 +372,10 @@ export default function URLScanner() {
             </div>
 
             {/* Input Area */}
-            <div className="glass-panel" style={{ 
-                padding: '1.5rem', 
+            <div className="glass-panel" style={{
+                padding: '1.5rem',
                 marginBottom: '1.5rem',
-                border: '1px solid rgba(167,139,250,0.15)'
+                border: '1px solid rgba(100,181,246,0.15)'
             }}>
                 <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                     <input
@@ -389,7 +389,7 @@ export default function URLScanner() {
                             padding: '1rem 1.25rem',
                             borderRadius: '10px',
                             background: 'rgba(2,4,8,0.6)',
-                            border: '1px solid rgba(167,139,250,0.3)',
+                            border: '1px solid rgba(100,181,246,0.3)',
                             color: '#e2e8f0',
                             fontSize: '1rem',
                             fontFamily: 'JetBrains Mono, monospace'
@@ -397,12 +397,12 @@ export default function URLScanner() {
                         onKeyDown={(e) => e.key === 'Enter' && scanUrl()}
                     />
                     
-                    <button 
+                    <button
                         onClick={scanUrl}
                         disabled={loading}
                         className="btn-cyber"
-                        style={{ 
-                            background: 'linear-gradient(135deg, #a78bfa, #7c3aed)',
+                        style={{
+                            background: 'linear-gradient(135deg, #64b5f6, #4a90e2)',
                             padding: '1rem 2rem'
                         }}
                     >
@@ -414,12 +414,12 @@ export default function URLScanner() {
                 </div>
                 
                 {error && (
-                    <div style={{ 
-                        padding: '0.75rem 1rem', 
-                        background: 'rgba(255,45,85,0.1)', 
-                        border: '1px solid rgba(255,45,85,0.3)',
+                    <div style={{
+                        padding: '0.75rem 1rem',
+                        background: 'rgba(100,181,246,0.1)',
+                        border: '1px solid rgba(100,181,246,0.3)',
                         borderRadius: '8px',
-                        color: '#ff2d55',
+                        color: '#64b5f6',
                         marginTop: '1rem',
                         fontSize: '0.9rem'
                     }}>
