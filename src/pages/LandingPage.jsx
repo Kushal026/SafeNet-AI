@@ -43,19 +43,7 @@ export default function LandingPage() {
                 {/* Hero Content */}
                 <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', maxWidth: '1000px', margin: '0 auto' }}>
                     {/* Status Badge */}
-                    <div style={{ 
-                        display: 'inline-flex', 
-                        alignItems: 'center', 
-                        gap: '0.5rem', 
-                        padding: '0.5rem 1.25rem', 
-                        borderRadius: '100px', 
-                        background: 'rgba(0, 255, 136, 0.08)', 
-                        border: '1px solid rgba(0, 255, 136, 0.25)', 
-                        marginBottom: '2rem' 
-                    }}>
-                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#00ff88', boxShadow: '0 0 10px #00ff88' }} />
-                        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#00ff88', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif', textTransform: 'uppercase' }}>System Online</span>
-                    </div>
+                   
 
                     {/* Main Title with Orbitron */}
                     <h1 style={{ 
@@ -95,9 +83,7 @@ export default function LandingPage() {
 
                     {/* CTA Buttons */}
                     <div style={{ display: 'flex', gap: '1.25rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '4rem' }}>
-                        <button onClick={() => navigate('/tools/phishing')} className="btn-cyber" style={{ padding: '1rem 2.5rem', fontSize: '1rem' }}>
-                            <span>Start Security Scan</span>
-                        </button>
+                        
                         <button onClick={() => navigate('/tools/chatbot')} className="btn-outline-cyber" style={{ padding: '1rem 2.5rem', fontSize: '1rem' }}>
                             <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                 Launch AI Assistant <ChevronRight size={18} />
@@ -106,145 +92,12 @@ export default function LandingPage() {
                     </div>
 
                     {/* Live Stats with futuristic styling */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '1rem', maxWidth: '750px', margin: '0 auto' }}>
-                        {threatStats ? (
-                            <>
-                                <div className="glass-panel" style={{ padding: '1.5rem', textAlign: 'center', borderColor: 'rgba(255,45,85,0.3)' }}>
-                                    <div style={{ fontSize: '2rem', fontWeight: 800, color: '#ff2d55', fontFamily: 'Orbitron, sans-serif' }}>
-                                        {(threatStats.threats_today / 1000).toFixed(0)}K+
-                                    </div>
-                                    <div style={{ fontSize: '0.7rem', color: 'rgba(203,213,225,0.6)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif' }}>Threats Today</div>
-                                </div>
-                                <div className="glass-panel" style={{ padding: '1.5rem', textAlign: 'center', borderColor: 'rgba(0,212,255,0.3)' }}>
-                                    <div style={{ fontSize: '2rem', fontWeight: 800, color: '#00d4ff', fontFamily: 'Orbitron, sans-serif' }}>
-                                        {(threatStats.phishing_urls_24h / 1000).toFixed(0)}K+
-                                    </div>
-                                    <div style={{ fontSize: '0.7rem', color: 'rgba(203,213,225,0.6)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif' }}>Phishing URLs</div>
-                                </div>
-                                <div className="glass-panel" style={{ padding: '1.5rem', textAlign: 'center', borderColor: 'rgba(167,139,250,0.3)' }}>
-                                    <div style={{ fontSize: '2rem', fontWeight: 800, color: '#a78bfa', fontFamily: 'Orbitron, sans-serif' }}>
-                                        {threatStats.critical_cves_week || 12}+
-                                    </div>
-                                    <div style={{ fontSize: '0.7rem', color: 'rgba(203,213,225,0.6)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif' }}>Critical CVEs</div>
-                                </div>
-                                <div className="glass-panel" style={{ padding: '1.5rem', textAlign: 'center', borderColor: 'rgba(0,255,136,0.3)' }}>
-                                    <div style={{ fontSize: '2rem', fontWeight: 800, color: '#00ff88', fontFamily: 'Orbitron, sans-serif' }}>
-                                        99.2%
-                                    </div>
-                                    <div style={{ fontSize: '0.7rem', color: 'rgba(203,213,225,0.6)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif' }}>Accuracy</div>
-                                </div>
-                            </>
-                        ) : (
-                            <div style={{ gridColumn: '1 / -1', padding: '2rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.75rem', color: 'rgba(203,213,225,0.6)' }}>
-                                <Loader2 size={20} className="animate-spin" style={{ animation: 'spin 1s linear infinite' }} />
-                                <span style={{ fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.05em' }}>Initializing Threat Database...</span>
-                            </div>
-                        )}
-                    </div>
+                   
                 </div>
             </section>
 
             {/* FEATURES SECTION */}
-            <section style={{ padding: '6rem 2rem', maxWidth: '1200px', margin: '0 auto' }}>
-                <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-                    <h2 style={{ 
-                        fontSize: '2.5rem', 
-                        fontWeight: 800, 
-                        color: '#f8fafc', 
-                        marginBottom: '1rem',
-                        fontFamily: 'Orbitron, sans-serif',
-                        letterSpacing: '0.02em'
-                    }}>
-                        Security <span style={{ color: '#00d4ff' }}>Tools</span>
-                    </h2>
-                    <p style={{ 
-                        fontSize: '1.1rem', 
-                        color: 'rgba(203,213,225,0.7)', 
-                        maxWidth: '600px', 
-                        margin: '0 auto',
-                        fontFamily: 'Rajdhani, sans-serif',
-                        fontWeight: 500
-                    }}>
-                        AI-powered tools to protect your digital life from modern threats
-                    </p>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '1.5rem' }}>
-                    {FEATURES.map((feature, i) => (
-                        <div 
-                            key={i}
-                            onClick={() => navigate(feature.path)}
-                            className="tool-card glass-panel"
-                            style={{ 
-                                padding: '2rem', 
-                                cursor: 'pointer',
-                                position: 'relative',
-                                overflow: 'hidden',
-                            }}
-                        >
-                            {/* Glow line at top */}
-                            <div style={{ 
-                                position: 'absolute', 
-                                top: 0, 
-                                left: 0, 
-                                right: 0, 
-                                height: '3px', 
-                                background: feature.color,
-                                boxShadow: `0 0 20px ${feature.color}`
-                            }} />
-                            
-                            <div style={{ 
-                                width: '56px', 
-                                height: '56px', 
-                                borderRadius: '14px', 
-                                background: `${feature.color}12`, 
-                                border: `1px solid ${feature.color}30`,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                marginBottom: '1.5rem',
-                            }}>
-                                <feature.icon size={28} style={{ color: feature.color }} />
-                            </div>
-                            
-                            <h3 style={{ 
-                                fontSize: '1.35rem', 
-                                fontWeight: 700, 
-                                color: '#f8fafc', 
-                                marginBottom: '0.75rem',
-                                fontFamily: 'Orbitron, sans-serif',
-                                letterSpacing: '0.02em'
-                            }}>
-                                {feature.title}
-                            </h3>
-                            
-                            <p style={{ 
-                                fontSize: '0.95rem', 
-                                color: 'rgba(203,213,225,0.7)', 
-                                lineHeight: 1.6,
-                                fontFamily: 'Inter, sans-serif'
-                            }}>
-                                {feature.desc}
-                            </p>
-                            
-                            <div style={{ 
-                                marginTop: '1.5rem', 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                gap: '0.5rem', 
-                                color: feature.color, 
-                                fontSize: '0.85rem', 
-                                fontWeight: 600,
-                                fontFamily: 'Rajdhani, sans-serif',
-                                textTransform: 'uppercase',
-                                letterSpacing: '0.05em'
-                            }}>
-                                Launch <ChevronRight size={16} />
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
+           
 
             {/* HOW IT WORKS */}
             <section style={{ padding: '6rem 2rem', background: 'rgba(0,0,0,0.3)' }}>

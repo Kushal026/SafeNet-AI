@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, Globe, Shield, Lock, MessageSquare, BarChart3, Activity, ChevronRight, AlertOctagon, Loader2, Radio, Cpu, Wifi, Zap } from 'lucide-react';
-
-const API_BASE = '/api';
+import { get, post } from '../utils/api';
 
 const TOOLS = [
     {
@@ -39,39 +38,31 @@ export default function Dashboard() {
     const navigate = useNavigate();
     const [threatData, setThreatData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [backendStatus, setBackendStatus] = useState('unknown');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch(`${API_BASE}/threat-intel`);
-                const data = await res.json();
+                const data = await get('/threat-intel');
+                const health = await get('/health');
                 setThreatData(data);
+                setBackendStatus(health?.status || 'unknown');
             } catch (e) {
                 console.error("Failed to fetch threat data:", e);
+                setBackendStatus('unreachable');
             }
             setLoading(false);
         };
         fetchData();
     }, []);
 
-    const alerts = threatData?.live_alerts || [];
     const globalStats = threatData?.global_stats || {};
 
     return (
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem 1.5rem' }}>
             {/* Header */}
             <div style={{ marginBottom: '2.5rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-                    <Radio size={16} style={{ color: '#00ff88', animation: 'pulse 2s infinite' }} />
-                    <span style={{ 
-                        fontSize: '0.75rem', 
-                        fontWeight: 700, 
-                        letterSpacing: '0.15em', 
-                        color: '#00ff88', 
-                        textTransform: 'uppercase',
-                        fontFamily: 'Rajdhani, sans-serif'
-                    }}>Command Center Online</span>
-                </div>
+                
                 <h1 style={{ 
                     fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', 
                     fontWeight: 800, 
@@ -88,60 +79,10 @@ export default function Dashboard() {
             </div>
 
             {/* Status Bar */}
-            <div className="glass-panel" style={{ 
-                padding: '1rem 1.5rem', 
-                marginBottom: '2rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                gap: '1rem',
-                border: '1px solid rgba(0,255,136,0.15)'
-            }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <Wifi size={18} style={{ color: '#00ff88' }} />
-                    <span style={{ color: '#f8fafc', fontWeight: 600, fontFamily: 'Rajdhani, sans-serif' }}>System Status:</span>
-                    <span style={{ color: '#00ff88', fontFamily: 'Rajdhani, sans-serif', fontWeight: 500 }}>ALL SYSTEMS OPERATIONAL</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'rgba(203,213,225,0.6)', fontSize: '0.85rem', fontFamily: 'JetBrains Mono, monospace' }}>
-                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#00ff88', boxShadow: '0 0 10px rgba(0,255,136,0.5)' }} />
-                    LIVE THREAT FEED
-                </div>
-            </div>
+            
+            
 
-            {/* Live Stats Banner */}
-            {loading ? (
-                <div style={{ padding: '2rem', textAlign: 'center', color: 'rgba(203,213,225,0.5)', marginBottom: '2rem' }}>
-                    <Loader2 size={24} className="animate-spin" style={{ animation: 'spin 1s linear infinite', margin: '0 auto' }} />
-                </div>
-            ) : globalStats.threats_today ? (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '2.5rem' }}>
-                    <div className="glass-panel" style={{ padding: '1.25rem', borderColor: 'rgba(255,45,85,0.3)', boxShadow: '0 0 20px rgba(255,45,85,0.1)' }}>
-                        <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#ff2d55', fontFamily: 'Orbitron, sans-serif', textShadow: '0 0 20px rgba(255,45,85,0.3)' }}>
-                            {(globalStats.threats_today / 1000).toFixed(1)}K
-                        </div>
-                        <div style={{ fontSize: '0.7rem', color: 'rgba(203,213,225,0.5)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif' }}>Threats Today</div>
-                    </div>
-                    <div className="glass-panel" style={{ padding: '1.25rem', borderColor: 'rgba(0,212,255,0.3)', boxShadow: '0 0 20px rgba(0,212,255,0.1)' }}>
-                        <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#00d4ff', fontFamily: 'Orbitron, sans-serif', textShadow: '0 0 20px rgba(0,212,255,0.3)' }}>
-                            {(globalStats.phishing_urls_24h / 1000).toFixed(1)}K
-                        </div>
-                        <div style={{ fontSize: '0.7rem', color: 'rgba(203,213,225,0.5)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif' }}>Phishing URLs</div>
-                    </div>
-                    <div className="glass-panel" style={{ padding: '1.25rem', borderColor: 'rgba(167,139,250,0.3)', boxShadow: '0 0 20px rgba(167,139,250,0.1)' }}>
-                        <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#a78bfa', fontFamily: 'Orbitron, sans-serif', textShadow: '0 0 20px rgba(167,139,250,0.3)' }}>
-                            {globalStats.critical_cves_week || '12+'}
-                        </div>
-                        <div style={{ fontSize: '0.7rem', color: 'rgba(203,213,225,0.5)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif' }}>Critical CVEs</div>
-                    </div>
-                    <div className="glass-panel" style={{ padding: '1.25rem', borderColor: 'rgba(0,255,136,0.3)', boxShadow: '0 0 20px rgba(0,255,136,0.1)' }}>
-                        <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#00ff88', fontFamily: 'Orbitron, sans-serif', textShadow: '0 0 20px rgba(0,255,136,0.3)' }}>
-                            {globalStats.active_campaigns}
-                        </div>
-                        <div style={{ fontSize: '0.7rem', color: 'rgba(203,213,225,0.5)', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: 'Rajdhani, sans-serif' }}>Active Campaigns</div>
-                    </div>
-                </div>
-            ) : null}
+            
 
             {/* Main Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }}>
@@ -282,89 +223,7 @@ export default function Dashboard() {
                 </div>
             </div>
 
-            {/* Live Alerts Section */}
-            {alerts.length > 0 && (
-                <div style={{ marginTop: '2.5rem' }}>
-                    <div style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: '0.5rem', 
-                        marginBottom: '1rem',
-                        fontFamily: 'Rajdhani, sans-serif',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.1em'
-                    }}>
-                        <AlertOctagon size={18} style={{ color: '#ff2d55' }} />
-                        <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f8fafc' }}>Live Threat Feed</h2>
-                    </div>
-                    
-                    <div style={{ display: 'grid', gap: '0.75rem' }}>
-                        {alerts.slice(0, 4).map((alert, i) => (
-                            <div 
-                                key={i} 
-                                className="glass-panel"
-                                style={{ 
-                                    padding: '1rem 1.25rem', 
-                                    display: 'flex', 
-                                    alignItems: 'center', 
-                                    gap: '1rem',
-                                    borderColor: alert.severity === 'CRITICAL' ? 'rgba(255,45,85,0.3)' : 'rgba(255,149,0,0.2)',
-                                    transition: 'all 0.2s ease'
-                                }}
-                            >
-                                <div style={{ 
-                                    width: '10px', 
-                                    height: '10px', 
-                                    borderRadius: '50%',
-                                    background: alert.severity === 'CRITICAL' ? '#ff2d55' : 
-                                                alert.severity === 'HIGH' ? '#ff9500' : 
-                                                alert.severity === 'MEDIUM' ? '#ffd60a' : '#00d4ff',
-                                    boxShadow: `0 0 15px ${alert.severity === 'CRITICAL' ? '#ff2d55' : alert.severity === 'HIGH' ? '#ff9500' : '#ffd60a'}`,
-                                    flexShrink: 0,
-                                    animation: alert.severity === 'CRITICAL' ? 'pulse 2s infinite' : 'none'
-                                }} />
-                                
-                                <div style={{ flex: 1 }}>
-                                    <div style={{ 
-                                        fontSize: '0.95rem', 
-                                        fontWeight: 600, 
-                                        color: '#f8fafc', 
-                                        marginBottom: '0.2rem',
-                                        fontFamily: 'Inter, sans-serif'
-                                    }}>
-                                        {alert.title}
-                                    </div>
-                                    <div style={{ 
-                                        fontSize: '0.75rem', 
-                                        color: 'rgba(203,213,225,0.5)',
-                                        fontFamily: 'JetBrains Mono, monospace'
-                                    }}>
-                                        {alert.source} • {alert.region} • {alert.time}
-                                    </div>
-                                </div>
-                                
-                                <span style={{ 
-                                    fontSize: '0.65rem', 
-                                    fontWeight: 700, 
-                                    padding: '0.25rem 0.6rem', 
-                                    borderRadius: '4px', 
-                                    background: alert.severity === 'CRITICAL' ? 'rgba(255,45,85,0.15)' : 
-                                                alert.severity === 'HIGH' ? 'rgba(255,149,0,0.15)' : 
-                                                'rgba(255,214,10,0.15)',
-                                    color: alert.severity === 'CRITICAL' ? '#ff2d55' : 
-                                           alert.severity === 'HIGH' ? '#ff9500' : '#ffd60a',
-                                    fontFamily: 'Rajdhani, sans-serif',
-                                    textTransform: 'uppercase',
-                                    letterSpacing: '0.05em',
-                                    flexShrink: 0
-                                }}>
-                                    {alert.severity}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )}
+            {/* Live Alerts removed */}
         </div>
     );
 }
