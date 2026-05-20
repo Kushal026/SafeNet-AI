@@ -1,40 +1,15 @@
-import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shield, Zap, Eye, Lock, MessageSquare, BarChart3, ChevronRight, Globe, Loader2, Cpu } from 'lucide-react';
-
-const API_BASE = '/api';
+import { Shield, Zap, Eye, Lock, MessageSquare, ChevronRight, Globe, Loader2, Cpu } from 'lucide-react';
 
 const FEATURES = [
     { icon: Eye, title: 'AI Phishing Detection', desc: 'Analyze suspicious emails and messages for phishing indicators in real-time.', color: '#00d4ff', path: '/tools/phishing' },
     { icon: Globe, title: 'URL Safety Scanner', desc: 'Check any website URL for malicious content, brand impersonation, and phishing.', color: '#00d4ff', path: '/tools/url-scanner' },
     { icon: Lock, title: 'Password Strength AI', desc: 'Evaluate password entropy, crack time, and get AI-powered improvement tips.', color: '#00d4ff', path: '/tools/password' },
     { icon: MessageSquare, title: 'AI Security Assistant', desc: 'Ask any cybersecurity question. Get expert answers from SafeNet AI.', color: '#00d4ff', path: '/tools/chatbot' },
-    { icon: Zap, title: 'App Permission Analyzer', desc: 'Identify dangerous permission combinations that put your privacy at risk.', color: '#00d4ff', path: '/tools/app-permissions' },
-    { icon: BarChart3, title: 'Threat Intelligence', desc: 'Live cybersecurity trends, attack statistics, and threat landscape data.', color: '#00d4ff', path: '/tools/threat-intel' },
 ];
 
 export default function LandingPage() {
     const navigate = useNavigate();
-    const [threatStats, setThreatStats] = useState(null);
-    const [loading, setLoading] = useState(false);
-
-    const fetchStats = async () => {
-        setLoading(true);
-        try {
-            const res = await fetch(`${API_BASE}/threat-intel`);
-            const data = await res.json();
-            if (data.global_stats) {
-                setThreatStats(data.global_stats);
-            }
-        } catch (e) {
-            console.error("Failed to fetch stats:", e);
-        }
-        setLoading(false);
-    };
-
-    useEffect(() => {
-        fetchStats();
-    }, []);
 
     return (
         <div style={{ overflow: 'hidden' }}>

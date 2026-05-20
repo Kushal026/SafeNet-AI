@@ -1,7 +1,7 @@
 """
-Threat Intelligence Service
+Security service utilities
 Integrates with VirusTotal, Google Safe Browsing, and WHOIS heuristics.
-Uses a feature-based scoring pipeline to classify URLs by safety, suspicion, or phishing.
+Provides URL reputation, phishing detection, and password breach checks.
 """
 import os
 import re

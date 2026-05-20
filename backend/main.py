@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
 from database import init_db
-from routers import phishing, url_scan, password, permissions, risk_score, chat, threat_intel, history
+from routers import phishing, url_scan, password, risk_score, chat, history
 
 load_dotenv()
 
@@ -40,10 +40,8 @@ app.add_middleware(
 app.include_router(phishing.router, prefix="/phishing-detect", tags=["Phishing Detection"])
 app.include_router(url_scan.router, prefix="/url-scan", tags=["URL Scanner"])
 app.include_router(password.router, prefix="/password-analyze", tags=["Password Analysis"])
-app.include_router(permissions.router, prefix="/app-permission-risk", tags=["App Permissions"])
 app.include_router(risk_score.router, prefix="/cyber-risk-score", tags=["Risk Score"])
 app.include_router(chat.router, prefix="/chat-assistant", tags=["AI Chatbot"])
-app.include_router(threat_intel.router, prefix="/threat-intel", tags=["Threat Intelligence"])
 app.include_router(history.router, prefix="/scan-history", tags=["Scan History"])
 
 
@@ -62,10 +60,8 @@ async def root():
             "/phishing-detect",
             "/url-scan",
             "/password-analyze",
-            "/app-permission-risk",
             "/cyber-risk-score",
             "/chat-assistant",
-            "/threat-intel",
             "/scan-history",
         ],
     }

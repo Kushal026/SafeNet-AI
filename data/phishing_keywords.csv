@@ -1,0 +1,56 @@
+category,keyword
+suspicious,urgent
+suspicious,immediately
+suspicious,verify now
+suspicious,account suspended
+suspicious,confirm your
+suspicious,security alert
+suspicious,unusual activity
+suspicious,login attempt
+suspicious,your account
+suspicious,expire
+suspicious,suspended
+suspicious,locked
+suspicious,update required
+action,click here
+action,enter password
+action,provide credentials
+action,update account
+action,reset your password
+threat,payment failed
+threat,invoice
+threat,overdue
+threat,confirm identity
+threat,unauthorized access
+threat,account locked
+threat,verify payment
+threat,bank alert
+threat,refund pending
+threat,service interruption
+threat,subscription cancelled
+threat,bill overdue
+threat,secure your account
+threat,appears suspicious
+threat,login from a new device
+threat,security verification
+threat,change your password
+threat,credential expiration
+threat,limited time offer
+threat,urgent action required
+threat,financial notice
+    threat,critical update
+    threat,unauthorized transaction
+    threat,verify your identity
+    threat,confirm information
+    threat,account verification
+    threat,make payment now
+    threat,respond immediately
+    threat,account update
+    threat,service alert
+    threat,security notice
+threat,verify account
+action,click here to verify
+action,click the link
+suspicious,verify identity
+suspicious,suspicious login
+suspicious,challenge your password

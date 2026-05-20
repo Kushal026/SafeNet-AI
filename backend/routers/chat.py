@@ -142,7 +142,7 @@ I'm your AI cybersecurity advisor. I can help you with:
 🎣 **Phishing detection** — Analyze suspicious emails or messages
 🔐 **Password security** — Strength analysis and best practices
 🌐 **URL safety** — Identify malicious websites
-📱 **App permissions** — Spot dangerous privacy risks
+� **Privacy guidance** — Protect your data and safe app use
 📶 **Network security** — Safe WiFi and VPN guidance
 🦠 **Malware protection** — Defend against viruses and ransomware
 

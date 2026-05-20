@@ -45,50 +45,6 @@ export async function geminiChat(history, userMessage) {
     return result.response.text();
 }
 
-// ─── Threat Intelligence — Live news feed ──────────────────
-export async function fetchThreatNews() {
-    const today = new Date().toISOString().split('T')[0];
-    const prompt = `You are a cybersecurity threat intelligence feed. Generate a JSON array of exactly 6 recent (as of ${today}) notable cybersecurity incidents and threat intelligence items.
-
-Each item must have these exact fields:
-- "time": relative time string (e.g. "2 hours ago", "6 hours ago", "1 day ago")
-- "type": attack type (e.g. "Ransomware", "Data Breach", "Phishing Campaign", "Zero-Day Exploit", "DDoS Attack", "Supply Chain Attack", "APT Activity", "Malware Campaign")
-- "target": victim organization/sector description
-- "severity": one of "critical", "high", "medium"
-- "impact": short impact description (e.g. "~$4.2M ransom", "2.8M records", "72hr outage")
-- "detail": one sentence describing the incident
-
-Make the incidents realistic, varied in geography and sector, and plausible for today's threat landscape.
-Return ONLY the raw JSON array, no markdown, no explanation.`;
-
-    const text = await geminiAnalyze(prompt);
-    // Strip any potential markdown code fences
-    const cleaned = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-    return JSON.parse(cleaned);
-}
-
-// ─── Live KPI stats for Threat Intelligence dashboard ───────
-export async function fetchThreatKPIs() {
-    const today = new Date().toISOString().split('T')[0];
-    const prompt = `Generate realistic cybersecurity threat statistics for ${today} as a JSON object with these exact fields:
-- "attacksToday": number (realistic daily global attacks, 40000-80000 range)
-- "attacksChange": string like "+14%" or "-3%"
-- "phishingSites": number (10000-20000 range)  
-- "phishingChange": string like "+9%"
-- "malwareSamples": number (15000-25000 range)
-- "malwareChange": string like "-2%"
-- "ransomwareIncidents": number (1800-3500 range)
-- "ransomwareChange": string like "+18%"
-- "dataBreaches": number (weekly, 25-60 range)
-- "breachesChange": string like "+7%"
-
-Return ONLY the raw JSON object, no markdown.`;
-
-    const text = await geminiAnalyze(prompt);
-    const cleaned = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-    return JSON.parse(cleaned);
-}
-
 // ─── Phishing Email — AI Insight ───────────────────────────
 export async function analyzePhishingAI(emailText, localScore) {
     const prompt = `You are a cybersecurity expert analyzing a potentially malicious email. The automated scanner gave it a risk score of ${localScore}/100.
@@ -142,22 +98,6 @@ export async function analyzePasswordAI(password, stats) {
 - Entropy: ${stats.entropy} bits
 
 Give 3 specific, actionable tips to improve or praise this password's security. Format as a short paragraph then 3 bullet points with •. Use **bold** for key terms. Total response under 120 words.`;
-
-    return await geminiAnalyze(prompt);
-}
-
-// ─── App Permission Analyzer — AI Risk Narrative ───────────
-export async function analyzePermissionsAI(appName, permissions, privacyScore) {
-    const prompt = `You are a mobile security expert. Analyze the privacy risk of the app "${appName}" requesting these permissions: ${permissions.join(', ')}.
-
-The automated scanner gave it a privacy score of ${privacyScore}/100.
-
-Provide a 3-4 sentence expert analysis covering:
-1. The most concerning permission combination and why it's dangerous
-2. What malicious behavior this permission set could enable
-3. Whether a legitimate app of this type typically needs these permissions
-
-Be specific to the app name and permissions listed. Use **bold** for key terms.`;
 
     return await geminiAnalyze(prompt);
 }

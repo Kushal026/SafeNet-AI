@@ -7,6 +7,8 @@ import re
 import math
 import string
 import difflib
+import os
+import csv
 from typing import Tuple, Optional
 
 
@@ -41,6 +43,80 @@ MALICIOUS_LINK_PATTERNS = [
     r"[a-z0-9]{20,}\.com",                               # Long random subdomains
 ]
 
+PHISHING_CSV_KEYWORDS_PATH = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'phishing_keywords.csv'))
+SPAM_CSV_KEYWORDS_PATH = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'spam_keywords.csv'))
+
+PHISHING_CSV_KEYWORDS = []
+SPAM_CSV_KEYWORDS = []
+
+
+def _load_csv_keywords(path):
+    if not os.path.exists(path):
+        return []
+    keywords = []
+    try:
+        with open(path, newline='', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                keyword = (row.get('keyword') or '').strip().lower()
+                if keyword:
+                    keywords.append(keyword)
+    except Exception:
+        pass
+    return keywords
+
+PHISHING_CSV_KEYWORDS = _load_csv_keywords(PHISHING_CSV_KEYWORDS_PATH)
+SPAM_CSV_KEYWORDS = _load_csv_keywords(SPAM_CSV_KEYWORDS_PATH)
+
+NAIVE_BAYES_ALPHA = 1.0
+SPAM_PRIOR = 0.2
+
+def _build_keyword_counts():
+    counts = {}
+    for kw in SPAM_CSV_KEYWORDS:
+        counts[kw] = counts.get(kw, 0) + 2
+    for kw in PHISHING_CSV_KEYWORDS:
+        counts[kw] = counts.get(kw, 0) + 1
+    return counts
+
+SPAM_KEYWORD_COUNTS = _build_keyword_counts()
+NB_VOCAB_SIZE = max(len(SPAM_KEYWORD_COUNTS), 1)
+NB_TOTAL_COUNTS = sum(SPAM_KEYWORD_COUNTS.values())
+
+
+def _find_keyword_matches(text, keywords):
+    matches = []
+    sorted_keywords = sorted(set(keywords), key=len, reverse=True)
+    for kw in sorted_keywords:
+        pattern = r'(?<!\w)' + re.escape(kw) + r'(?!\w)'
+        found = re.findall(pattern, text)
+        if found:
+            matches.extend([kw] * len(found))
+            text = re.sub(pattern, ' ', text)
+    return matches
+
+
+def _compute_naive_bayes_spam_probability(text):
+    tokens = _find_keyword_matches(text, list(SPAM_KEYWORD_COUNTS.keys()))
+    if not tokens:
+        return 0.05
+
+    log_spam = math.log(SPAM_PRIOR)
+    log_ham = math.log(1 - SPAM_PRIOR)
+    smoothing = NAIVE_BAYES_ALPHA
+    denom_spam = NB_TOTAL_COUNTS + smoothing * (NB_VOCAB_SIZE + 1)
+    denom_ham = NB_TOTAL_COUNTS + smoothing * (NB_VOCAB_SIZE + 1)
+
+    for token in tokens:
+        token_count = SPAM_KEYWORD_COUNTS.get(token, 0)
+        prob_token_spam = (token_count + smoothing) / denom_spam
+        prob_token_ham = (smoothing if token in SPAM_KEYWORD_COUNTS else 1 + smoothing) / denom_ham
+        log_spam += math.log(prob_token_spam)
+        log_ham += math.log(prob_token_ham)
+
+    prob = 1 / (1 + math.exp(log_ham - log_spam))
+    return min(max(prob, 0.0), 1.0)
+
 
 def detect_phishing(text: str, sender: Optional[str] = None, headers: Optional[dict] = None) -> dict:
     """
@@ -52,6 +128,8 @@ def detect_phishing(text: str, sender: Optional[str] = None, headers: Optional[d
     found_domains = []
     found_brands = []
     found_links = []
+    found_csv_keywords = []
+    found_spam_keywords = []
     sender_indicators = []
     header_indicators = []
     style_indicators = []
@@ -60,6 +138,16 @@ def detect_phishing(text: str, sender: Optional[str] = None, headers: Optional[d
     for word in URGENCY_WORDS:
         if word in text_lower:
             found_urgency.append(word)
+
+    # Check suspicious/threat keywords from CSV
+    for word in PHISHING_CSV_KEYWORDS:
+        if word in text_lower and word not in found_urgency and word not in found_csv_keywords:
+            found_csv_keywords.append(word)
+
+    # Check spam classification words from CSV
+    for word in SPAM_CSV_KEYWORDS:
+        if word in text_lower and word not in found_spam_keywords:
+            found_spam_keywords.append(word)
 
     # Check suspicious domain patterns
     for pattern in SUSPICIOUS_DOMAINS:
@@ -160,6 +248,11 @@ def detect_phishing(text: str, sender: Optional[str] = None, headers: Optional[d
     score_text += min(len(found_domains) * 12, 30)
     score_text += min(len(found_brands) * 14, 35)
     score_text += min(len(found_links) * 12, 30)
+    score_text += min(len(found_csv_keywords) * 10, 40)
+    score_text += min(len(found_spam_keywords) * 8, 32)
+
+    spam_probability = _compute_naive_bayes_spam_probability(text_lower)
+    naive_bayes_score = round(spam_probability * 100)
 
     # Sender / header / style based scoring
     score_sender = min(len(sender_indicators) * 18, 40)
@@ -167,6 +260,7 @@ def detect_phishing(text: str, sender: Optional[str] = None, headers: Optional[d
     score_style = min(len(style_indicators) * 12, 24)
 
     score = score_text + score_sender + score_header + score_style
+    score = max(score, naive_bayes_score)
 
     # Extra indicators: email addresses in message body that mimic brands
     if re.search(r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b', text, re.IGNORECASE):
@@ -206,6 +300,10 @@ def detect_phishing(text: str, sender: Optional[str] = None, headers: Optional[d
         suspicious_elements.append(f"Brand impersonation / lookalike: {', '.join(found_brands[:3])}")
     if found_links:
         suspicious_elements.append(f"Malicious link patterns detected")
+    if found_csv_keywords:
+        suspicious_elements.append(f"Suspicious terms: {', '.join(found_csv_keywords[:5])}")
+    if found_spam_keywords:
+        suspicious_elements.append(f"Spam-like terms detected: {', '.join(found_spam_keywords[:5])}")
     if sender_indicators:
         suspicious_elements.append(f"Sender indicators: {', '.join(sender_indicators[:3])}")
     if header_indicators:
@@ -222,6 +320,8 @@ def detect_phishing(text: str, sender: Optional[str] = None, headers: Optional[d
             "suspicious_domains": found_domains[:5],
             "brand_impersonation": found_brands[:5],
             "malicious_links": found_links[:3],
+            "spam_keywords": found_spam_keywords[:5],
+            "naive_bayes_probability": round(spam_probability * 100, 1),
         },
         "ai_explanation": _generate_phishing_explanation(level, score, found_urgency, found_brands, found_domains),
         "security_advice": _generate_security_advice(level),
@@ -506,185 +606,7 @@ PERMISSION_REAL_WORLD_EXAMPLES = {
     "device_admin": "Device administration for enterprise device management.",
 }
 
-def analyze_permissions(app_name: str, permissions: list) -> dict:
-    # Normalize permission names
-    perms_normalized = [p.lower().replace(" ", "_").replace("-", "_") for p in permissions]
-    perms_lower = set(perms_normalized)
-
-    # Try to infer app category from name (simple heuristics)
-    name = app_name.lower()
-    category = None
-    if any(k in name for k in ("flash", "torch")):
-        category = "flashlight"
-    elif any(k in name for k in ("camera", "photo", "scan", "qr")):
-        category = "camera"
-    elif any(k in name for k in ("bank", "pay", "wallet")):
-        category = "banking"
-    elif any(k in name for k in ("chat", "msg", "social", "whatsapp", "telegram")):
-        category = "social"
-    elif any(k in name for k in ("game", "puzzle", "arcade")):
-        category = "game"
-    elif any(k in name for k in ("shop", "store", "buy", "amazon")):
-        category = "shopping"
-    else:
-        category = "utility"
-
-    individual_risks = []
-    permission_analysis = []
-    anomalies = []
-    required_set = APP_CATEGORY_REQUIRED.get(category, set())
-    optional_set = APP_CATEGORY_OPTIONAL.get(category, set())
-    for orig, key in zip(permissions, perms_normalized):
-        lookup = key
-        why = PERMISSION_USAGE_HINTS.get(lookup, "This permission grants access to device capability.")
-
-        # Probability of necessity (0.0 - 1.0)
-        if lookup in required_set:
-            prob = 0.98
-        elif lookup in optional_set:
-            prob = 0.60
-        elif lookup in APP_CATEGORY_PERMISSIONS.get(category, set()):
-            prob = 0.75
-        else:
-            prob = 0.12
-
-        # Slightly increase probability if matches a trusted app pattern
-        for tperms in TRUSTED_APP_PATTERNS.values():
-            if lookup in tperms:
-                prob = min(1.0, prob + 0.08)
-                break
-
-        # Risk (0.0 - 1.0)
-        risk = round(max(0.0, min(1.0, 1.0 - prob)), 3)
-
-        # Anomaly flags
-        if risk > 0.7:
-            anomaly_level = "HIGH"
-            anomalies.append({"permission": orig, "risk": risk, "level": "HIGH"})
-        elif risk >= 0.4:
-            anomaly_level = "MEDIUM"
-            anomalies.append({"permission": orig, "risk": risk, "level": "MEDIUM"})
-        else:
-            anomaly_level = "LOW"
-
-        expected = lookup in APP_CATEGORY_PERMISSIONS.get(category, set())
-        why_expected = PERMISSION_USAGE_HINTS.get(lookup, "Commonly used for app features.") if expected else "Not typically required for this app category."
-        why_unusual = "" if expected else f"Unusual: {why}"
-        real_world = PERMISSION_REAL_WORLD_EXAMPLES.get(lookup, "Often used for related app functionality in real-world examples.")
-
-        individual_risks.append({
-            "permission": orig,
-            "key": lookup,
-            "probability_of_necessity": prob,
-            "risk": risk,
-            "anomaly_level": anomaly_level,
-            "why_expected": why_expected,
-            "why_unusual": why_unusual,
-            "real_world_justification": real_world,
-        })
-
-        # Permission analysis line
-        pct = int(prob * 100)
-        permission_analysis.append(f"{orig} → necessity_prob={prob:.2f} ({pct}%), risk={risk:.2f} ({anomaly_level})")
-
-    combo_risks = []
-    for combo, level, name, desc in DANGEROUS_COMBOS:
-        if combo.issubset(perms_lower):
-            combo_risks.append({
-                "combination": list(combo),
-                "risk_level": level,
-                "threat_name": name,
-                "description": desc,
-            })
-
-    # Score
-    # Base score: sum of individual risk weights
-    base = sum(r["risk"] for r in individual_risks)
-    # Combo additions
-    combo_score = sum(40 if r["risk_level"] == "CRITICAL" else 25 if r["risk_level"] == "HIGH" else 15
-                      for r in combo_risks)
-
-    # Over-permissioning penalty: unexpected permissions increase risk
-    unexpected = [r for r in individual_risks if not r["expected_for_category"]]
-    over_penalty = sum(min(r["risk"], 30) for r in unexpected)
-
-    total = min(base + combo_score + int(over_penalty * 0.6), 100)
-
-    # Extra penalty: internet combined with many sensitive perms increases exfiltration risk
-    sensitive = {'contacts', 'storage', 'location', 'microphone', 'camera', 'read_sms', 'call_log', 'accounts'}
-    if 'internet' in perms_lower and len(perms_lower & sensitive) >= 2:
-        total = min(100, total + 18)
-    if 'internet' in perms_lower and len(perms_lower & sensitive) == 1:
-        total = min(100, total + 8)
-
-    if total >= 61:
-        risk_level = "HIGH"
-    elif total >= 31:
-        risk_level = "MEDIUM"
-    else:
-        risk_level = "SAFE"
-
-    recommendations = []
-    if total >= 61:
-        recommendations.append(f"Avoid installing or uninstall — {app_name} requests high-risk permissions")
-    if combo_risks:
-        recommendations.append("Detected dangerous permission combinations — uninstall or deny permissions immediately")
-    recommendations.append("Review app permissions in Settings and deny anything not required for core functionality")
-    if "internet" in perms_lower and len(perms_lower) > 5:
-        recommendations.append("This app can transmit large amounts of data; consider denying network access or uninstalling")
-    # More tailored recommendations
-    if 'background' in perms_lower:
-        recommendations.append('Background execution detected — restrict when not essential')
-    if 'accessibility' in perms_lower or 'overlay' in perms_lower:
-        recommendations.append('Accessibility/overlay permissions are highly privileged — only allow for trusted apps')
-    # Per-unexpected permission advice
-    for u in unexpected:
-        recommendations.append(f"Permission '{u['permission']}' looks unnecessary for a {category} app. Consider denying it.")
-
-    # Trusted app comparison
-    similar = None
-    for tname, tperms in TRUSTED_APP_PATTERNS.items():
-        if perms_lower <= tperms or len(perms_lower & tperms) >= max(1, len(tperms)//2):
-            similar = tname
-            break
-    if similar:
-        recommendations.append(f"This app's permission set partially matches {similar} (trusted pattern). Still review unexpected permissions.")
-
-    # Final verdict mapping: Safe / Suspicious / High Risk
-    if total >= 61:
-        verdict = "High Risk"
-    elif total >= 31:
-        verdict = "Suspicious"
-    else:
-        verdict = "Safe"
-
-    # Reason: concise 1-2 lines
-    reasons = []
-    if unexpected:
-        reasons.append(f"Contains {len(unexpected)} unexpected permission(s) for a {category} app.")
-    if combo_risks:
-        reasons.append(f"Detected {len(combo_risks)} dangerous permission combination(s).")
-    if not reasons:
-        reasons.append("Permissions align with expected behavior for app category.")
-    reason_text = " ".join(reasons)[:240]
-
-    return {
-        "app_name": app_name,
-        "privacy_risk_score": total,
-        "risk_level": risk_level,
-        "app_category": category,
-        "individual_permission_risks": individual_risks,
-        "dangerous_combinations": combo_risks,
-        "total_permissions": len(permissions),
-        "unexpected_permissions": [u['permission'] for u in unexpected],
-        "trusted_match": similar,
-        "recommendations": recommendations,
-        # User-requested output summary fields
-        "permission_analysis": permission_analysis,
-        "final_risk_score": total,
-        "verdict": verdict,
-        "reason": reason_text,
-    }
+# App permission analysis removed — feature deprecated.
 
 
 # ─── Cyber Risk Score ────────────────────────────────────────────────────────

@@ -13,10 +13,8 @@ SafeNet-AI is a modern cybersecurity dashboard that helps users detect phishing 
 - 🤖 **AI Phishing Detector** - Analyze emails for phishing indicators
 - 🌐 **URL Safety Scanner** - Check websites for malicious content
 - 🔐 **Password Strength Analyzer** - Evaluate passwords with breach checking
-- 📱 **App Permission Analyzer** - Identify dangerous permission combinations
-- 💬 **AI Security Assistant** - Ask cybersecurity questions
+-  **AI Security Assistant** - Ask cybersecurity questions
 - 📊 **Cyber Risk Score** - Personal security assessment
-- 📈 **Threat Intelligence Dashboard** - Live cyber attack statistics
 
 ## 🚀 Quick Start
 
@@ -114,10 +112,8 @@ SafeNet-AI/
 | `/phishing-detect` | POST | Detect phishing in text |
 | `/url-scan` | POST | Scan URL for threats |
 | `/password-analyze` | POST | Analyze password strength |
-| `/app-permission-risk` | POST | Analyze app permissions |
 | `/cyber-risk-score` | POST | Calculate risk score |
 | `/chat-assistant` | POST | AI chatbot |
-| `/threat-intel` | GET | Get threat statistics |
 
 API Documentation: http://localhost:8000/docs
 

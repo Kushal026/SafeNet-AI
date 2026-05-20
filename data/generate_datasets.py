@@ -11,7 +11,7 @@ os.makedirs(OUT_DIR, exist_ok=True)
 
 def rand_domain():
     tlds = ['com','net','org','info']
-    names = ['malicious','suspicious','benign','accounts','secure','login','update','service','portal']
+    names = ['malicious','suspicious','benign','accounts','secure','login','update','service','portal','fake ']
     return f"{random.choice(names)}{random.randint(1,9999)}.{random.choice(tlds)}"
 
 def rand_path():

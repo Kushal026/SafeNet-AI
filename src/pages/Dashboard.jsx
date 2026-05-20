@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye, Globe, Shield, Lock, MessageSquare, BarChart3, Activity, ChevronRight, AlertOctagon, Loader2, Radio, Cpu, Wifi, Zap } from 'lucide-react';
-import { get, post } from '../utils/api';
+import { Eye, Globe, Lock, MessageSquare, Activity, ChevronRight, Loader2, Cpu, Zap } from 'lucide-react';
+import { get } from '../utils/api';
 
 const TOOLS = [
     {
@@ -11,10 +11,6 @@ const TOOLS = [
     {
         id: 2, icon: Globe, title: 'URL Scanner', desc: 'Check URLs for malware and brand impersonation.',
         color: '#64b5f6', tag: 'Web', path: '/tools/url-scanner',
-    },
-    {
-        id: 3, icon: Shield, title: 'App Permissions', desc: 'Detect risky permission combinations in apps.',
-        color: '#64b5f6', tag: 'Mobile', path: '/tools/app-permissions',
     },
     {
         id: 4, icon: Lock, title: 'Password Analyzer', desc: 'Evaluate password strength and breach status.',
@@ -28,35 +24,26 @@ const TOOLS = [
         id: 6, icon: Activity, title: 'Cyber Risk Score', desc: 'Assess your personal security posture.',
         color: '#64b5f6', tag: 'Risk', path: '/tools/risk-score',
     },
-    {
-        id: 7, icon: BarChart3, title: 'Threat Intel', desc: 'Monitor global cyber threats and trends.',
-        color: '#64b5f6', tag: 'Intel', path: '/tools/threat-intel',
-    },
-];
+            ];
 
 export default function Dashboard() {
     const navigate = useNavigate();
-    const [threatData, setThreatData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [backendStatus, setBackendStatus] = useState('unknown');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await get('/threat-intel');
                 const health = await get('/health');
-                setThreatData(data);
                 setBackendStatus(health?.status || 'unknown');
             } catch (e) {
-                console.error("Failed to fetch threat data:", e);
+                console.error("Failed to fetch backend health:", e);
                 setBackendStatus('unreachable');
             }
             setLoading(false);
         };
         fetchData();
     }, []);
-
-    const globalStats = threatData?.global_stats || {};
 
     return (
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem 1.5rem' }}>

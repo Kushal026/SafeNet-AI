@@ -10,7 +10,6 @@ export default function Navbar() {
     const links = [
         { label: 'Home', path: '/' },
         { label: 'Dashboard', path: '/dashboard' },
-        { label: 'Threat Intel', path: '/tools/threat-intel' },
         { label: 'AI Chat', path: '/tools/chatbot' },
     ];
 

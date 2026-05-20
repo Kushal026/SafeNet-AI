@@ -43,7 +43,6 @@ http://localhost:5173
 ## What's Updated
 
 ### ✅ Real-Time Data
-- Threat Intelligence fetches from public APIs (URLhaus, NVD)
 - Realistic attack trends based on known patterns
 - Live threat alerts updated dynamically
 
@@ -54,8 +53,6 @@ http://localhost:5173
 - Responsive design for all devices
 
 ### ✅ Connected Features
-- Landing Page: Live threat statistics
-- Dashboard: Real-time alerts & stats
 - All tools connected to backend APIs
 - Floating AI Assistant working
 
@@ -65,7 +62,5 @@ http://localhost:5173
 1. AI Phishing Detector
 2. URL Safety Scanner  
 3. Password Strength Analyzer
-4. App Permission Analyzer
-5. Cyber Risk Score
-6. AI Security Chatbot
-7. Threat Intelligence Dashboard
+4. Cyber Risk Score
+5. AI Security Chatbot
