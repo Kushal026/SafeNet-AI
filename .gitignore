@@ -12,6 +12,38 @@ dist
 dist-ssr
 *.local
 
+# Environment and secrets
+.env
+.env.*
+*.env
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Python virtual environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Databases and local storage
+*.db
+*.sqlite
+*.sqlite3
+*.db3
+*.bak
+
+# Passwords and sensitive data files
+passwords*
+*password*.csv
+*password*.json
+*password*.txt
+*secret*.json
+*secret*.txt
+*.dump
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

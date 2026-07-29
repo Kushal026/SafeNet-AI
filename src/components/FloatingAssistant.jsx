@@ -79,7 +79,7 @@ export default function FloatingAssistant({ isOpen, setIsOpen }) {
         }
 
         try {
-            const res = await fetch(`${API_BASE}/chat-assistant`, {
+            const res = await fetch('/api/chat-assistant', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message, history: newMessages.slice(-6) }),

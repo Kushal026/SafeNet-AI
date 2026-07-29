@@ -98,7 +98,7 @@ export default function ChatBot() {
         }
 
         try {
-            const res = await fetch(`${API_BASE}/chat-assistant`, {
+            const res = await fetch('/api/chat-assistant', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
