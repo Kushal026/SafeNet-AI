@@ -16,6 +16,14 @@ dist-ssr
 .env
 .env.*
 *.env
+backend/.env
+backend/.env.*
+backend/*.env
+backend/*.pem
+backend/*.key
+backend/*.crt
+backend/*.p12
+backend/*.pfx
 *.pem
 *.key
 *.crt
@@ -34,6 +42,13 @@ __pycache__/
 *.sqlite3
 *.db3
 *.bak
+backend/*.db
+backend/*.sqlite
+backend/*.sqlite3
+backend/*.db3
+backend/*.bak
+backend/data/
+backend/**/data/
 
 # Passwords and sensitive data files
 passwords*
